@@ -7,5 +7,5 @@ export const MiddleButton = ({ props, className, children }: { props?: any, clas
 };
 
 export const SmallButton = ({ props, className, children }: { props?: any, className?: string, children?: React.ReactNode; }) => {
-    return <button className={`font-body text-btn-sm bg-gray-100 px-4 py-2 hover:shadow-md ${className}`} {...props}>{children}</button>;
+    return <button className={`font-body text-btn-sm bg-gray-100 px-6 py-3 hover:shadow-lg rounded-sm ${className}`} {...props}>{children}</button>;
 };

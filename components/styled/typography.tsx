@@ -18,7 +18,7 @@ export const SubHeading = ({ props, className, children }: { props?: any, classN
 };
 
 export const Logo = ({ props, className, children }: { props?: any, className?: string, children?: React.ReactNode; }) => {
-    return <h4 className={`font-logo text-logo font-semibold ${className}`} {...props}>{children}</h4>;
+    return <Link href="/" className={`font-logo text-logo font-semibold ${className}`} {...props}>{children}</Link>;
 };
 
 export const Paragraph = ({ props, className, children }: { props?: any, className?: string, children?: React.ReactNode; }) => {
@@ -29,6 +29,10 @@ export const Code = ({ props, className, children }: { props?: any, className?: 
     return <span className={`font-code text-code ${className}`} {...props}>{children}</span>;
 };
 
-export const Menu = ({ props, url, className, children }: { props?: any, url?: string, className?: string, children?: React.ReactNode; }) => {
+export const Menu = ({ props, url, className, children }: { props?: any, url: string, className?: string, children?: React.ReactNode; }) => {
     return <Link href={url} className={`font-body text-menu ${className}`} {...props}>{children}</Link>;
+};
+
+export const MobileMenu = ({ props, url, className, children }: { props?: any, url: string, className?: string, children?: React.ReactNode; }) => {
+    return <Link href={url} className={`font-body text-mobile-menu ${className}`} {...props}>{children}</Link>;
 };

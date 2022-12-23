@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
 const defaultTheme = require('tailwindcss/defaultTheme');
+const colors = require('tailwindcss/colors');
 
 module.exports = {
   content: [
@@ -11,10 +12,10 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        heading: ['var(--font-expletus)', ...defaultTheme.fontFamily.sans],
-        body: ['var(--font-questrial)', ...defaultTheme.fontFamily.sans],
-        code: ['var(--font-ibm)', ...defaultTheme.fontFamily.mono],
-        logo: ['var(--font-expletus)', ...defaultTheme.fontFamily.sans],
+        heading: ['Expletus Sans', ...defaultTheme.fontFamily.sans],
+        logo: ['Expletus Sans', ...defaultTheme.fontFamily.sans],
+        body: ['Questrial', ...defaultTheme.fontFamily.serif],
+        code: ['IBM Plex Mono', ...defaultTheme.fontFamily.mono],
       },
       fontSize: {
         title: [
@@ -65,6 +66,12 @@ module.exports = {
             lineHeight: '1.25rem',
           },
         ],
+        'mobile-menu': [
+          ...defaultTheme.fontSize['2xl'],
+          {
+            lineHeight: '1.75rem',
+          },
+        ],
         'btn-sm': [
           ...defaultTheme.fontSize['xl'],
           {
@@ -83,6 +90,11 @@ module.exports = {
             lineHeight: '2.25rem',
           },
         ],
+      },
+      colors: {
+        dark: colors.stone[900],
+        light: colors.stone[200],
+        shadow: colors.stone[300],
       },
     },
   },
