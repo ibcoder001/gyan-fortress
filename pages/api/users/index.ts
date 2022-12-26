@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { createUser, getUserById, getUsers } from '@lib/prisma/user';
-import { PrismaClientKnownRequestError, PrismaClientUnknownRequestError, PrismaClientValidationError } from '@prisma/client/runtime';
+import { createUser, getUsers } from '@lib/prisma/user';
+import bcrypt from 'bcrypt';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'GET') {
@@ -24,7 +24,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'POST') {
         try {
             const data = req.body;
-            const { user, error } = await createUser(data);
+            const hashPassword = await bcrypt.hash(data.password, 10);
+            const userData = { ...data, password: hashPassword };
+            const { user, error } = await createUser(userData);
             if (error) throw new Error(error);
             return res.status(201).json({ user });
         } catch (error: any) {

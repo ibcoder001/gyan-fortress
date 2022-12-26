@@ -11,7 +11,7 @@ const Header = async () => {
     const { users } = await getUsers();
     const numberOfUsers = Number(users?.length);
     return (
-        <header className='py-4 bg-light'>
+        <header className='py-4 bg-shadow'>
             <Container className='flex items-center justify-between'>
                 <section className='flex items-center justify-between flex-1 gap-20 xl:justify-start'>
                     <Logo>Gyan Fortress</Logo>

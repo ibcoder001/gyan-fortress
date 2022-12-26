@@ -45,11 +45,17 @@ module.exports = {
         logo: [
           ...defaultTheme.fontSize['2xl'],
           {
+            lineHeight: '2rem',
+          },
+        ],
+        formText: [
+          ...defaultTheme.fontSize['xl'],
+          {
             lineHeight: '1.75rem',
           },
         ],
         paragraph: [
-          ...defaultTheme.fontSize['lg'],
+          ...defaultTheme.fontSize['xl'],
           {
             lineHeight: '1.75rem',
           },
@@ -57,7 +63,7 @@ module.exports = {
         code: [
           ...defaultTheme.fontSize['lg'],
           {
-            lineHeight: '1.5rem',
+            lineHeight: '1.75rem',
           },
         ],
         menu: [
@@ -93,10 +99,10 @@ module.exports = {
       },
       colors: {
         dark: colors.stone[900],
-        light: colors.stone[200],
+        light: colors.stone[100],
         shadow: colors.stone[300],
       },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/forms')],
 };

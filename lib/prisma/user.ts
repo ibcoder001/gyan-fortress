@@ -1,6 +1,5 @@
 import { getPrismaClient } from '.';
 import { z } from 'zod';
-import { PrismaClientKnownRequestError, PrismaClientUnknownRequestError, PrismaClientValidationError } from '@prisma/client/runtime';
 
 const prisma = getPrismaClient();
 
@@ -14,10 +13,10 @@ export async function getUsers() {
 }
 
 const userSchemaInterface = z.object({
-    firstname: z.string(),
-    lastname: z.string(),
+    username: z.string(),
     email: z.string().email(),
     password: z.string(),
+    signForNewsLetter: z.boolean().default(false),
     imageUrl: z.string().optional()
 });
 
