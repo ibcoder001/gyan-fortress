@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
 const defaultTheme = require('tailwindcss/defaultTheme');
+const colors = require('tailwindcss/colors');
 
 module.exports = {
   content: [
@@ -11,10 +12,10 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        heading: ['var(--font-expletus)', ...defaultTheme.fontFamily.sans],
-        body: ['var(--font-questrial)', ...defaultTheme.fontFamily.sans],
-        code: ['var(--font-ibm)', ...defaultTheme.fontFamily.mono],
-        logo: ['var(--font-expletus)', ...defaultTheme.fontFamily.sans],
+        heading: ['Expletus Sans', ...defaultTheme.fontFamily.sans],
+        logo: ['Expletus Sans', ...defaultTheme.fontFamily.sans],
+        body: ['Questrial', ...defaultTheme.fontFamily.serif],
+        code: ['IBM Plex Mono', ...defaultTheme.fontFamily.mono],
       },
       fontSize: {
         title: [
@@ -44,11 +45,17 @@ module.exports = {
         logo: [
           ...defaultTheme.fontSize['2xl'],
           {
+            lineHeight: '2rem',
+          },
+        ],
+        formText: [
+          ...defaultTheme.fontSize['xl'],
+          {
             lineHeight: '1.75rem',
           },
         ],
         paragraph: [
-          ...defaultTheme.fontSize['lg'],
+          ...defaultTheme.fontSize['xl'],
           {
             lineHeight: '1.75rem',
           },
@@ -56,13 +63,19 @@ module.exports = {
         code: [
           ...defaultTheme.fontSize['lg'],
           {
-            lineHeight: '1.5rem',
+            lineHeight: '1.75rem',
           },
         ],
         menu: [
           ...defaultTheme.fontSize['base'],
           {
             lineHeight: '1.25rem',
+          },
+        ],
+        'mobile-menu': [
+          ...defaultTheme.fontSize['2xl'],
+          {
+            lineHeight: '1.75rem',
           },
         ],
         'btn-sm': [
@@ -84,7 +97,12 @@ module.exports = {
           },
         ],
       },
+      colors: {
+        dark: colors.stone[900],
+        light: colors.stone[100],
+        shadow: colors.stone[300],
+      },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/forms')],
 };

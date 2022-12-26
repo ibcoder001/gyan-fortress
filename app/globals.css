@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Expletus+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&family=Questrial&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  #__next {
+    @apply contents;
+  }
+
+  html {
+    @apply h-full scroll-smooth antialiased;
+  }
+
+  body {
+    @apply flex h-full flex-col;
+  }
+
+  main {
+    @apply flex-1;
+  }
+}
