@@ -87,7 +87,7 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
             setFormType("newsletter");
         } catch (error: any) {
             console.log(error);
-            toast.error(error?.message || "Some error happened", {
+            toast.error(error?.response?.data?.error?.message || "Some error happened", {
                 className: "border-none w-max-content h-auto py-4 px-4 text-xl",
                 ariaProps: {
                     role: "alert",
@@ -113,8 +113,8 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
             });
             navigator.push('/books');
         } catch (error: any) {
-            console.log(error);
-            toast.error(error?.message || "Some error happened", {
+            loginReset();
+            toast.error(error?.response?.data?.error?.message || "Some error happened", {
                 id: "login-error",
                 className: "border-none w-max-content h-auto py-4 px-4 text-xl",
                 ariaProps: {
@@ -130,7 +130,7 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
         const userData = { ...sanitizedData };
         try {
             await axios.post("/api/users/verify", { ...userData });
-            loginReset();
+            loginVerificationReset();
             toast.success("Login code sent to your email", {
                 id: "login-success",
                 className: "border-none w-max-content h-auto py-4 px-4 text-xl",
@@ -141,8 +141,8 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
             });
             navigator.push('/books');
         } catch (error: any) {
-            console.log(error);
-            toast.error(error?.message || "Some error happened", {
+            loginVerificationReset();
+            toast.error(error?.response?.data?.error?.message || "Some error happened", {
                 id: "login-error",
                 className: "border-none w-max-content h-auto py-4 px-4 text-xl",
                 ariaProps: {
