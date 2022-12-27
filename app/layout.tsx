@@ -2,6 +2,7 @@ import './globals.css';
 import Header from './header';
 import Footer from './footer';
 import { AnalyticsWrapper } from '@/components/analytics/analytics';
+import { ToasterWrapper } from '@/components/parts/toaster';
 
 export default function RootLayout({ children }: { children: React.ReactNode; }) {
   return (
@@ -14,6 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode; })
           {children}
         </main>
         <Footer />
+        <ToasterWrapper />
         <AnalyticsWrapper />
       </body>
     </html>

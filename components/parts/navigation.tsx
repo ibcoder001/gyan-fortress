@@ -51,7 +51,7 @@ const Navigation = ({ numberOfUsers }: { numberOfUsers: number; }) => {
                 <Link href="/cart">
                     <li className='relative flex items-center gap-1 mr-6'>
                         <ShoppingBagIcon className="w-6 h-6 text-dark" />
-                        <span className='absolute flex items-center justify-center w-6 h-6 text-xs rounded-full bg-dark text-light top-[-6px] right-[-12px]'>{numberOfUsers}</span>
+                        <span className='absolute flex items-center justify-center w-6 h-6 text-xs rounded-full bg-dark text-light top-[-6px] right-[-12px]'>{0}</span>
                     </li>
                 </Link>
                 <div className='flex flex-col items-end flex-1 gap-1 xl:hidden' onClick={openMobileNavigation}>

@@ -33,9 +33,9 @@ export async function createUser(user: TUser) {
     }
 }
 
-export async function getUserById(id: string) {
+export async function getUserByEmail(email: string) {
     try {
-        const user = await prisma.user.findUnique({ where: { id } });
+        const user = await prisma.user.findUnique({ where: { email } });
         return { user };
     } catch (error: any) {
         return { error };
