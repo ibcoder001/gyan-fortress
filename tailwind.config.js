@@ -4,6 +4,7 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 const colors = require('tailwindcss/colors');
 
 module.exports = {
+  important: true,
   content: [
     './pages/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
@@ -12,8 +13,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        heading: ['Expletus Sans', ...defaultTheme.fontFamily.sans],
-        logo: ['Expletus Sans', ...defaultTheme.fontFamily.sans],
+        heading: ['Josefin Sans', ...defaultTheme.fontFamily.sans],
+        logo: ['Josefin Sans', ...defaultTheme.fontFamily.sans],
         body: ['Questrial', ...defaultTheme.fontFamily.serif],
         code: ['IBM Plex Mono', ...defaultTheme.fontFamily.mono],
       },
