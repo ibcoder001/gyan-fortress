@@ -15,6 +15,6 @@ model User {
   username          String  @unique
   email             String  @unique
   signForNewsLetter Boolean @default(true)
-  web3Id            String  @unique @default(cuid())
+  web3Id            String? @unique @default(cuid())
   imageUrl          String?
 }
