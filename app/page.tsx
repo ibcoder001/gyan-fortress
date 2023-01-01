@@ -1,26 +1,16 @@
-import Form from '@/components/parts/form';
-import { LargeButton } from '@/components/styled/button';
 import { Container } from '@/components/styled/layout';
-import { Title } from '@/components/styled/typography';
+import Link from 'next/link';
 
 const Page = () => {
-    return <section className='flex items-center justify-center h-full bg-light'>
-        <Container className='flex flex-col items-center justify-between xl:flex-row'>
-            <section className='relative items-center justify-center flex-1 hidden pr-16 xl:flex'>
-                <div className='w-96 h-96 border-t-dark border-l-dark border-t-[1.5rem] border-l-[1.5rem] absolute top-[-5rem] left-0'></div>
-                <div className='flex flex-col gap-16 px-16 py-0'>
-                    <Title>Join The Literary Revolution</Title>
-                    <LargeButton className='bg-dark text-light'>Start Browsing</LargeButton>
-                </div>
-                <div className='w-96 h-96 border-b-dark border-r-dark border-r-[1.5rem] border-b-[1.5rem] absolute bottom-[-5rem] right-[4rem]'></div>
+    return <section className='flex items-center justify-center h-full md:items-start lg:items-center'>
+        <Container className='flex flex-col items-center justify-between'>
+            <section className='flex flex-col items-center text-center justify-center flex-1 gap-4 md:items-center lg:items-center md:py-8 bg-light lg:w-[50rem]'>
+                <h1 className='title'>Discover <span className='gradient-text'>Affordable</span> Knowledge</h1>
+                <h2 className='subtitle'>Access high-quality knowledge to engineering, commerce, and scientific books and papers, at affordable prices &amp; support fair compensation for authors</h2>
+                <Link href="/auth/sign-up">
+                    <button className='btn-large mt-4 bg-dark text-light gradient-highlight'>Join Club Now</button>
+                </Link>
             </section>
-            <section className='relative items-center justify-center flex-1 pr-16 xl:hidden'>
-                <div className='flex flex-col gap-16 px-16 py-0'>
-                    <Title>Join The Literary Revolution</Title>
-                    <LargeButton className='bg-dark text-light'>Start Browsing</LargeButton>
-                </div>
-            </section>
-            <Form type="signup" />
         </Container>
     </section>;
 };

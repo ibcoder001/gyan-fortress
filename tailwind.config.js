@@ -13,95 +13,16 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        heading: ['Josefin Sans', ...defaultTheme.fontFamily.sans],
-        logo: ['Josefin Sans', ...defaultTheme.fontFamily.sans],
-        body: ['Questrial', ...defaultTheme.fontFamily.serif],
-        code: ['IBM Plex Mono', ...defaultTheme.fontFamily.mono],
-      },
-      fontSize: {
-        title: [
-          ...defaultTheme.fontSize['8xl'],
-          {
-            lineHeight: 1,
-          },
-        ],
-        subtitle: [
-          ...defaultTheme.fontSize['4xl'],
-          {
-            lineHeight: 1,
-          },
-        ],
-        heading: [
-          ...defaultTheme.fontSize['6xl'],
-          {
-            lineHeight: 1,
-          },
-        ],
-        subheading: [
-          ...defaultTheme.fontSize['3xl'],
-          {
-            lineHeight: '2.25rem',
-          },
-        ],
-        logo: [
-          ...defaultTheme.fontSize['2xl'],
-          {
-            lineHeight: '2rem',
-          },
-        ],
-        formText: [
-          ...defaultTheme.fontSize['xl'],
-          {
-            lineHeight: '1.75rem',
-          },
-        ],
-        paragraph: [
-          ...defaultTheme.fontSize['xl'],
-          {
-            lineHeight: '1.75rem',
-          },
-        ],
-        code: [
-          ...defaultTheme.fontSize['lg'],
-          {
-            lineHeight: '1.75rem',
-          },
-        ],
-        menu: [
-          ...defaultTheme.fontSize['base'],
-          {
-            lineHeight: '1.25rem',
-          },
-        ],
-        'mobile-menu': [
-          ...defaultTheme.fontSize['2xl'],
-          {
-            lineHeight: '1.75rem',
-          },
-        ],
-        'btn-sm': [
-          ...defaultTheme.fontSize['xl'],
-          {
-            lineHeight: '1.75rem',
-          },
-        ],
-        'btn-md': [
-          ...defaultTheme.fontSize['2xl'],
-          {
-            lineHeight: '2rem',
-          },
-        ],
-        'btn-lg': [
-          ...defaultTheme.fontSize['3xl'],
-          {
-            lineHeight: '2.25rem',
-          },
-        ],
+        heading: ['Libre Caslon Text', ...defaultTheme.fontFamily.sans],
+        body: ['Montserrat', ...defaultTheme.fontFamily.serif],
       },
       colors: {
+        // dark: '#0D1713',
         dark: colors.stone[900],
-        light: colors.stone[100],
-        shadow: colors.stone[300],
+        light: '#F2EBE3',
+        // highlight: '#E1C7A2',
+        highlight: '#DAAA63',
+        // light: colors.rose[100],
       },
     },
   },

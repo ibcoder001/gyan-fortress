@@ -1,8 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Josefin+Sans:wght@400;500;600;700&family=Questrial&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto:wght@500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Libre+Caslon+Text&family=Montserrat:wght@500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
 
 @layer base {
   #__next {
@@ -19,5 +26,37 @@
 
   main {
     @apply flex-1;
+  }
+
+  .title {
+    @apply text-4xl leading-tight font-heading md:text-center md:text-6xl md:leading-tight lg:text-6xl lg:text-center lg:leading-tight;
+  }
+
+  .subtitle {
+    @apply text-base md:text-2xl md:mt-0 mt-[-0.2rem] md:text-center lg:text-2xl lg:text-center;
+  }
+
+  .btn-large {
+    @apply max-w-fit font-body font-bold uppercase text-lg lg:text-xl lg:px-8 lg:py-8 md:text-2xl md:px-10 md:py-10 px-8 py-6 hover:shadow-lg rounded-sm;
+  }
+
+  .btn-medium {
+    @apply max-w-fit font-body font-bold uppercase text-lg px-8 py-6 hover:shadow-lg rounded-sm;
+  }
+
+  .btn-small {
+    @apply max-w-fit font-body uppercase text-sm px-6 py-4 hover:shadow-lg rounded-sm;
+  }
+
+  .gradient-highlight {
+    @apply bg-gradient-to-br from-highlight to-dark text-light;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-br from-highlight to-dark text-transparent bg-clip-text font-bold;
+  }
+
+  .link {
+    @apply uppercase font-body text-sm hover:font-semibold;
   }
 }
