@@ -1,6 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 
+// type TTextProps = Heading
+
 export const Title = ({ props, className, children }: { props?: any, className?: string, children?: React.ReactNode; }) => {
     return <h1 className={`font-heading text-title font-semibold ${className}`} {...props}>{children}</h1>;
 };
@@ -18,7 +20,7 @@ export const SubHeading = ({ props, className, children }: { props?: any, classN
 };
 
 export const Logo = ({ props, className, children }: { props?: any, className?: string, children?: React.ReactNode; }) => {
-    return <Link href="/" className={`font-logo text-logo font-semibold ${className}`} {...props}>{children}</Link>;
+    return <Link href="/" className={`font-logo text-xl font-bold ${className}`} {...props}>{children}</Link>;
 };
 
 export const Paragraph = ({ props, className, children }: { props?: any, className?: string, children?: React.ReactNode; }) => {
