@@ -1,11 +1,15 @@
-import { createUser } from '@lib/prisma/user';
+import { createUser, getUserByEmail } from '@lib/prisma/user';
+import bcrypt from 'bcryptjs';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === "POST") {
         try {
-            const data = req.body;
-            const userData = { ...data };
+            const email = req.body?.email;
+            const { user: existingUser } = await getUserByEmail(email);
+            if (existingUser) throw new Error("Email already exists!");
+            const hashPassword = await bcrypt.hash(req.body?.password, process.env.SERVER_HASH_SALT!);
+            const userData = { ...req.body, password: hashPassword };
             const { user, error } = await createUser(userData);
             if (error) throw new Error(error);
             return res.status(201).json({ user });

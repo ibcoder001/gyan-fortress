@@ -7,6 +7,7 @@ specifiers:
   '@prisma/client': ^4.8.0
   '@tailwindcss/forms': ^0.5.3
   '@types/bcrypt': ^5.0.0
+  '@types/bcryptjs': ^2.4.2
   '@types/dompurify': ^2.4.0
   '@types/node': 18.11.17
   '@types/react': 18.0.26
@@ -14,6 +15,7 @@ specifiers:
   '@vercel/analytics': ^0.1.6
   autoprefixer: ^10.4.13
   axios: ^1.2.1
+  bcryptjs: ^2.4.3
   csstype: ^3.0.10
   dompurify: ^2.4.1
   emailable: ^3.0.3
@@ -39,6 +41,7 @@ dependencies:
   '@prisma/client': 4.8.0_prisma@4.8.0
   '@vercel/analytics': 0.1.6_react@18.2.0
   axios: 1.2.1
+  bcryptjs: 2.4.3
   csstype: 3.1.1
   dompurify: 2.4.1
   emailable: 3.0.3
@@ -54,6 +57,7 @@ dependencies:
 devDependencies:
   '@tailwindcss/forms': 0.5.3_tailwindcss@3.2.4
   '@types/bcrypt': 5.0.0
+  '@types/bcryptjs': 2.4.2
   '@types/dompurify': 2.4.0
   '@types/node': 18.11.17
   '@types/react': 18.0.26
@@ -350,6 +354,10 @@ packages:
       '@types/node': 18.11.17
     dev: true
 
+  /@types/bcryptjs/2.4.2:
+    resolution: {integrity: sha512-LiMQ6EOPob/4yUL66SZzu6Yh77cbzJFYll+ZfaPiPPFswtIlA/Fs1MzdKYA7JApHU49zQTbJGX3PDmCpIdDBRQ==}
+    dev: true
+
   /@types/dompurify/2.4.0:
     resolution: {integrity: sha512-IDBwO5IZhrKvHFUl+clZxgf3hn2b/lU6H1KaBShPkQyGJUQ0xwebezIPSuiyGwfz1UzJWQl4M7BDxtHtCCPlTg==}
     dependencies:
@@ -642,6 +650,10 @@ packages:
   /balanced-match/1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
     dev: true
+
+  /bcryptjs/2.4.3:
+    resolution: {integrity: sha512-V/Hy/X9Vt7f3BbPJEi8BdVFMByHi+jNXrYkW3huaybV/kQ0KJg0Y6PkEMbn+zeT+i+SiKZ/HMqJGIIt4LZDqNQ==}
+    dev: false
 
   /binary-extensions/2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
