@@ -23,12 +23,12 @@ const Header = async () => {
                         </Link>
                         <li>
                             <button className='btn-small border-2 px-[1.4rem] py-[0.9rem] border-dark text-dark font-bold'>
-                                <Link href="/">Sign In</Link>
+                                <Link href="/auth/login">Sign In</Link>
                             </button>
                         </li>
                         <li>
                             <button className='btn-small gradient-highlight'>
-                                <Link href="/">Sign Up</Link>
+                                <Link href="/auth/signup">Sign Up</Link>
                             </button>
                         </li>
                     </ul>

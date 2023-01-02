@@ -22,6 +22,7 @@ module.exports = {
         light: '#F2EBE3',
         // highlight: '#E1C7A2',
         highlight: '#DAAA63',
+        googledark: '#4285F4',
         // light: colors.rose[100],
       },
     },

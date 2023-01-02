@@ -59,4 +59,20 @@
   .link {
     @apply uppercase font-body text-sm hover:font-semibold;
   }
+
+  .form {
+    @apply flex flex-col w-full h-full gap-6 pt-4 justify-center;
+  }
+
+  .form-group {
+    @apply flex flex-col gap-2;
+  }
+
+  .form-group-button {
+    @apply flex flex-col items-start justify-between gap-8 mt-4 xl:mt-4 xl:gap-0 xl:flex-row;
+  }
+
+  .label {
+    @apply flex items-end gap-2 text-lg font-bold;
+  }
 }
