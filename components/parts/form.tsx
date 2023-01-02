@@ -10,6 +10,7 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { Heading, Paragraph } from '../styled/typography';
 import { MediumButton } from '../styled/button';
+import Image from 'next/image';
 
 
 const emailProviders = ["gmail.com", "outlook.com", "yahoo.com", "zoho.com", "protonmail.com", "aol.com", "yandex.com", "icloud.com", "fastmail.com", "gmx.com"];
@@ -27,12 +28,13 @@ const checkEmailValid = (email: string) => {
 const signUpFormSchema = z.object({
     username: z.string().trim().min(6, "Username must be at least 6 characters long"),
     email: z.string().trim().email("Please enter valid email!"),
-    signUpVerified: z.boolean().default(false),
+    password: z.string().trim().min(8).max(16),
     signForNewsLetter: z.boolean().default(true)
 });
 
 const loginFormSchema = z.object({
-    email: z.string().trim().email("Please enter valid email!")
+    email: z.string().trim().email("Please enter valid email!"),
+    password: z.string().trim().min(8).max(16)
 });
 
 const loginVerificationFormSchema = z.object({
@@ -57,11 +59,12 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
 
     const [formType, setFormType] = useState<"signup" |
         "login" | "contact" | "newsletter" | "loginVerification">(type);
+
     const [signUpEmailError, setSignUpEmailError] = useState<string | undefined>(undefined);
 
-    const { register: signUpRegister, reset: signUpReset, handleSubmit: signUpHandleSubmit, formState: { errors: signUpErrors } } = useForm<TSignUpFormSchema>({ resolver: zodResolver(signUpFormSchema) });
+    const { register: signUpRegister, reset: signUpReset, handleSubmit: signUpHandleSubmit, formState: { errors: signUpErrors, isSubmitting: isSignupSubmitting } } = useForm<TSignUpFormSchema>({ resolver: zodResolver(signUpFormSchema) });
 
-    const { register: loginRegister, reset: loginReset, handleSubmit: loginHandleSubmit, formState: { errors: loginErrors } } = useForm<TLoginFormSchema>({ resolver: zodResolver(loginFormSchema) });
+    const { register: loginRegister, reset: loginReset, handleSubmit: loginHandleSubmit, formState: { errors: loginErrors, isSubmitting: isLoginSubmitting } } = useForm<TLoginFormSchema>({ resolver: zodResolver(loginFormSchema) });
 
     const { register: loginVerificationRegister, reset: loginVerificationReset, handleSubmit: loginVerificationHandleSubmit, formState: { errors: loginVerificationErrors } } = useForm<TLoginVerificationFormSchema>({ resolver: zodResolver(loginVerificationFormSchema) });
 
@@ -108,20 +111,32 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
     };
 
     const onLoginUpSubmit: SubmitHandler<TLoginFormSchema> = async (data) => {
-        const sanitizedData = { email: sanitize(data.email) };
+        const sanitizedData = { email: sanitize(data.email), password: sanitize(data.password || "") };
         const userData = { ...sanitizedData };
         try {
-            await axios.post("/api/users/login", { ...userData });
+            const res = await axios.post("/api/users/login", { ...userData });
+            console.log(res);
             loginReset();
-            toast.success("Login code sent to your email", {
-                id: "login-success",
-                className: "border-none w-max-content h-auto py-4 px-4 text-xl",
-                ariaProps: {
-                    role: "alert",
-                    'aria-live': "polite"
-                }
-            });
-            navigator.push('/books');
+            if (!userData.password) {
+                toast.success("Login code sent to your email", {
+                    id: "login-success",
+                    className: "border-none w-max-content h-auto py-4 px-4 text-xl",
+                    ariaProps: {
+                        role: "alert",
+                        'aria-live': "polite"
+                    }
+                });
+            } else {
+                toast.success(`Welcome back ${res}`, {
+                    id: "login-success",
+                    className: "border-none w-max-content h-auto py-4 px-4 text-xl",
+                    ariaProps: {
+                        role: "alert",
+                        'aria-live': "polite"
+                    }
+                });
+            }
+            navigator.push('/');
         } catch (error: any) {
             loginReset();
             toast.error(error?.response?.data?.error?.message || "Some error happened", {
@@ -193,50 +208,156 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
     let formContent = <></>;
 
     if (formType === "signup") {
-        formContent = <section className='py-8 xl:flex-1 xl:pl-16 xl:pr-0 xl:block'>
-            <Heading>Sign Up</Heading>
-            <form onSubmit={signUpHandleSubmit(onSignUpSubmit)} className="flex flex-col w-full h-full gap-6 py-3 mt-8">
-                <div className="flex flex-col gap-2">
-                    <label htmlFor="username" className='flex items-end gap-2 text-formText'><span>Username</span>
-                        <span className='text-base text-red-700'>{signUpErrors?.username?.message}</span></label>
-                    <input type="text" className='py-4 text-formText text-dark placeholder:text-dark/50' id="username" placeholder='ibcoder001' {...signUpRegister('username')} />
-                </div>
-                <div className="flex flex-col gap-2">
-                    <label htmlFor="email" className='flex items-end gap-2 text-formText'>Email
-                        <span className='text-base text-red-700'>{signUpErrors?.email?.message}</span></label>
-                    <input type="email" className='py-4 text-formText text-dark placeholder:text-dark/50' id="email" placeholder='example@ibcoder.com' {...signUpRegister('email')} />
-                    <span className='text-base text-red-700'>{signUpEmailError}</span>
-                </div>
-                <div className="flex flex-col gap-2 my-2">
-                    <label className='flex items-center justify-start gap-2 cursor-pointer text-formText text-dark'>
-                        <input type="checkbox" className="w-6 h-6 cursor-pointer text-dark focus:text-dark" checked={true} id="signForNewsLetter" {...signUpRegister('signForNewsLetter')} /> <span>Sign me up for weekly product updates for 6 weeks</span>
-                    </label>
-                </div>
-                <div className="flex flex-col items-start justify-between gap-8 xl:mt-4 xl:gap-0 xl:flex-row form-group">
-                    <MediumButton type='submit' className='order-2 bg-dark text-light xl:order-1'>Sign Up</MediumButton>
-                    <div className="flex flex-col items-start justify-end order-1 gap-4 xl:items-end xl:order-2">
-                        <span className='cursor-pointer text-formText' onClick={() => changeFormType("login")}>Already a member? <span className="font-semibold">Login</span></span>
-                    </div>
-                </div>
+        formContent = <section className='flex flex-col items-center jusitfy-center w-full px-4 h-full py-12 max-w-3xl lg:max-w-5xl mx-auto'>
+            <form onSubmit={signUpHandleSubmit(onSignUpSubmit)} className="form">
+                <h1 className="title w-full text-left mb-8">Sign Up</h1>
+                <section className='flex flex-col lg:flex-row gap-12'>
+                    <section className='flex-1 order-2 flex flex-col gap-4'>
+                        <h2 className="text-2xl font-bold w-full text-left mb-4 lg:mb-8">Socials</h2>
+                        <div className="form-group">
+                            <div className="form-group-button w-full">
+                                <button type='button' className='btn-medium py-[0.375rem] px-2 flex items-center max-w-full w-full bg-white text-dark border border-dark mt-0'>
+                                    <Image src="/assets/google-sign-in/btn_google_light_normal_ios.svg" width={64} height={64} alt="Sign up with Google" />
+                                    <span className='inline-flex ml-3 text-sm'>Sign up with Google</span>
+                                </button>
+                            </div>
+                            <div className="form-group-button w-full">
+                                <button type='button' className='btn-medium py-[0.375rem] px-2 flex items-center max-w-full w-full bg-white text-dark border border-dark'>
+                                    <Image src="/assets/web-3/metamask/metamask-fox.svg" width={64} height={64} alt="Sign up with MetaMask" />
+                                    <span className='inline-flex ml-3 text-sm'>Sign up with MetaMask</span>
+                                </button>
+                            </div>
+                            <div className="form-group-button w-full">
+                                <button type='button' className='btn-medium py-[0.375rem] px-2 flex items-center max-w-full w-full bg-white text-dark border border-dark'>
+                                    <Image src="/assets/web-3/trust-wallet/TWT.svg" width={64} height={64} alt="Sign up with Trust Wallet" />
+                                    <span className='inline-flex ml-3 text-sm'>Sign up with Trust Wallet</span>
+                                </button>
+                            </div>
+                            <div className="form-group-button w-full">
+                                <button type='button' className='btn-medium py-[0.375rem] px-2 flex items-center max-w-full w-full bg-white text-dark border border-dark'>
+                                    <Image src="/assets/web-3/phantom-wallet/phantom-icon-purple.svg" width={64} height={64} alt="Sign up with Phantom Wallet" />
+                                    <span className='inline-flex ml-3 text-sm'>Sign up with Phantom Wallet</span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                    <section className='flex-1 flex flex-col gap-4'>
+                        <h2 className="text-2xl font-bold w-full text-left mb-4 lg:mb-8">Credentials</h2>
+                        <div className="form-group">
+                            <div className="form-group">
+                                <label htmlFor="username" className='label'>Username <span>*</span>
+                                    <span className='text-base text-red-700'>{signUpErrors?.username?.message}</span></label>
+                                <input type="text" className='py-4 text-formText text-dark placeholder:text-dark/50' id="username" placeholder='ibcoder001' required {...signUpRegister('username')} />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="email" className='label'>Email <span>*</span>
+                                    <span className='text-base text-red-700'>{loginErrors?.email?.message}</span></label>
+                                <input type="email" className='py-4 text-formText text-dark placeholder:text-dark/50' id="email" placeholder='example@ibcoder.com' required {...signUpRegister('email')} />
+                                <span className='text-base text-red-700'>{signUpEmailError}</span>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="password" className='label'>Password <span>*</span>
+                                    <span className='text-base text-red-700'>{loginErrors?.password?.message}</span></label>
+                                <input type="password" className='py-4 text-formText text-dark placeholder:text-dark/50' id="password" placeholder='********' required {...signUpRegister('password')} />
+                            </div>
+                            <div className="form-group">
+                                <label className='label items-center cursor-pointer font-normal text-base my-4'>
+                                    <input type="checkbox" className="w-6 h-6 cursor-pointer text-dark focus:text-dark" checked={true} id="signForNewsLetter" {...signUpRegister('signForNewsLetter')} /> <span>Sign me up for weekly product updates for 6 weeks</span>
+                                </label>
+                            </div>
+                            <div className="form-group items-start gap-4">
+                                {isSignupSubmitting ? <div className="form-group-button w-full">
+                                    <button type='button' className='btn-medium bg-dark/80 text-light flex items-center max-w-full w-full text-center'>
+                                        <svg className="mr-3 h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <span className='w-full'>Please wait...</span>
+                                    </button>
+                                </div> : <div className="form-group-button w-full">
+                                    <button type='submit' className='btn-medium bg-dark text-light flex items-center max-w-full w-full text-center'>
+                                        <span className='w-full'>Sign Up</span>
+                                    </button>
+                                </div>}
+                                <div className="flex flex-col items-end justify-end gap-4">
+                                    <span className='cursor-pointer text-formText' onClick={() => changeFormType("login")}>Already a member? <span className="font-semibold">Login</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </section>
             </form>
         </section>;
     }
 
     if (formType === "login") {
-        formContent = <section className='py-8 lg:flex-1 lg:pl-16 lg:pr-0 lg:block'>
-            <Heading>Login</Heading>
-            <form onSubmit={loginHandleSubmit(onLoginUpSubmit)} className="flex flex-col w-full h-full gap-6 pt-3 mt-8">
-                <div className="flex flex-col gap-2">
-                    <label htmlFor="email" className='flex items-end gap-2 text-formText'>Email
-                        <span className='text-base text-red-700'>{loginErrors?.email?.message}</span></label>
-                    <input type="email" className='py-4 text-formText text-dark placeholder:text-dark/50' id="email" placeholder='example@ibcoder.com' required {...loginRegister('email')} />
-                </div>
-                <div className="flex items-end justify-between mt-4 form-group">
-                    <MediumButton type='submit' className='bg-dark text-light'>Login</MediumButton>
-                    <div className="flex flex-col items-end justify-end gap-4">
-                        <span className='cursor-pointer text-formText' onClick={() => changeFormType("signup")}>New to the site? <span className="font-semibold">Sign Up</span></span>
-                    </div>
-                </div>
+        formContent = <section className='flex flex-col items-center jusitfy-center w-full px-4 h-full py-12 max-w-3xl lg:max-w-5xl mx-auto'>
+            <form onSubmit={loginHandleSubmit(onLoginUpSubmit)} className="form">
+                <h1 className="title w-full text-left mb-8">Sign In</h1>
+                <section className='flex flex-col lg:flex-row gap-12'>
+                    <section className='flex-1 order-2 flex flex-col gap-4'>
+                        <h2 className="text-2xl font-bold w-full text-left mb-4 lg:mb-8">Socials</h2>
+                        <div className="form-group">
+                            <div className="form-group-button w-full">
+                                <button type='button' className='btn-medium py-[0.375rem] px-2 flex items-center max-w-full w-full bg-white text-dark border border-dark mt-0'>
+                                    <Image src="/assets/google-sign-in/btn_google_light_normal_ios.svg" width={64} height={64} alt="Sign in with Google" />
+                                    <span className='inline-flex ml-3 text-sm'>Sign in with Google</span>
+                                </button>
+                            </div>
+                            <div className="form-group-button w-full">
+                                <button type='button' className='btn-medium py-[0.375rem] px-2 flex items-center max-w-full w-full bg-white text-dark border border-dark'>
+                                    <Image src="/assets/web-3/metamask/metamask-fox.svg" width={64} height={64} alt="Sign in with MetaMask" />
+                                    <span className='inline-flex ml-3 text-sm'>Sign in with MetaMask</span>
+                                </button>
+                            </div>
+                            <div className="form-group-button w-full">
+                                <button type='button' className='btn-medium py-[0.375rem] px-2 flex items-center max-w-full w-full bg-white text-dark border border-dark'>
+                                    <Image src="/assets/web-3/trust-wallet/TWT.svg" width={64} height={64} alt="Sign in with Trust Wallet" />
+                                    <span className='inline-flex ml-3 text-sm'>Sign in with Trust Wallet</span>
+                                </button>
+                            </div>
+                            <div className="form-group-button w-full">
+                                <button type='button' className='btn-medium py-[0.375rem] px-2 flex items-center max-w-full w-full bg-white text-dark border border-dark'>
+                                    <Image src="/assets/web-3/phantom-wallet/phantom-icon-purple.svg" width={64} height={64} alt="Sign in with Phantom Wallet" />
+                                    <span className='inline-flex ml-3 text-sm'>Sign in with Phantom Wallet</span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                    <section className='flex-1 flex flex-col gap-4'>
+                        <h2 className="text-2xl font-bold w-full text-left mb-4 lg:mb-8">Credentials</h2>
+                        <div className="form-group">
+                            <div className="form-group">
+                                <label htmlFor="email" className='label'>Email <span>*</span>
+                                    <span className='text-base text-red-700'>{loginErrors?.email?.message}</span></label>
+                                <input type="email" className='py-4 text-formText text-dark placeholder:text-dark/50' id="email" placeholder='example@ibcoder.com' required {...loginRegister('email')} />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="password" className='label'>Password <span>*</span>
+                                    <span className='text-base text-red-700'>{loginErrors?.password?.message}</span></label>
+                                <input type="password" className='py-4 text-formText text-dark placeholder:text-dark/50' id="password" placeholder='********' required {...loginRegister('password')} />
+                            </div>
+                            <div className="form-group items-start gap-4">
+                                {isLoginSubmitting ? <div className="form-group-button w-full">
+                                    <button type='button' className='btn-medium bg-dark/80 text-light flex items-center max-w-full w-full text-center'>
+                                        <svg className="mr-3 h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <span className='w-full'>Please wait...</span>
+                                    </button>
+                                </div> : <div className="form-group-button w-full">
+                                    <button type='submit' className='btn-medium bg-dark text-light flex items-center max-w-full w-full text-center'>
+                                        <span className='w-full'>Login</span>
+                                    </button>
+                                </div>}
+                                <div className="flex flex-col items-end justify-end gap-4">
+                                    <span className='cursor-pointer text-formText' onClick={() => changeFormType("signup")}>New to the site? <span className="font-semibold">Sign Up</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </section>
             </form>
         </section>;
     }
@@ -244,8 +365,8 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
     if (type === "loginVerification") {
         formContent = <section className='py-8 xl:flex-1 xl:pl-16 xl:pr-0 xl:block'>
             <Heading>Enter the code</Heading>
-            <form onSubmit={loginVerificationHandleSubmit(onLoginVerificationUpSubmit)} className="flex flex-col w-full h-full gap-6 pt-3 mt-8">
-                <div className="flex flex-col gap-2">
+            <form onSubmit={loginVerificationHandleSubmit(onLoginVerificationUpSubmit)} className="form mt-8">
+                <div className="form-group">
                     <label htmlFor="verificationCode" className='flex items-end gap-2 text-formText'>Verification Code
                         <span className='text-base text-red-700'>{loginVerificationErrors?.verificationCode?.message}</span></label>
                     <input type="text" className='py-4 text-formText text-dark placeholder:text-dark/50' id="verificationCode" placeholder='example@ibcoder.com' required {...loginVerificationRegister('verificationCode')} />
@@ -263,36 +384,36 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
 
     if (formType === "contact") {
         formContent = <section className='flex-1 w-full'>
-            <form onSubmit={contactHandleSubmit(onContactMeSubmit)} className="flex flex-col w-full h-full gap-6 pt-3">
-                <div className="flex flex-col gap-2">
-                    <label htmlFor="name" className='flex items-end gap-2 text-lg font-bold'>Name
+            <form onSubmit={contactHandleSubmit(onContactMeSubmit)} className="form pt-0">
+                <div className="form-group">
+                    <label htmlFor="name" className='label'>Name <span>*</span>
                         <span className='text-base text-red-700'>{contactErrors?.name?.message}</span></label>
                     <input type="text" className='py-4 text-lg font-bold text-dark placeholder:text-dark/50' id="name" placeholder='Vasudev Krishna' required {...contactRegister('name')} />
                 </div>
-                <div className="flex flex-col gap-2">
-                    <label htmlFor="email" className='flex items-end gap-2 text-lg font-bold'>Email
+                <div className="form-group">
+                    <label htmlFor="email" className='label'>Email <span>*</span>
                         <span className='text-base text-red-700'>{contactErrors?.email?.message}</span></label>
                     <input type="email" className='py-4 text-lg font-bold text-dark placeholder:text-dark/50' id="email" placeholder='example@gmail.com' required {...contactRegister('email')} />
                 </div>
-                <div className="flex flex-col gap-2">
-                    <label htmlFor="phone" className='flex items-end gap-2 text-lg font-bold'>Phone
+                <div className="form-group">
+                    <label htmlFor="phone" className='label'>Phone <span>*</span>
                         <span className='text-base text-red-700'>{contactErrors?.phone?.message}</span></label>
                     <input type="text" className='py-4 text-lg font-bold text-dark placeholder:text-dark/50' id="phone" placeholder='8765757332' required {...contactRegister('phone')} />
                 </div>
-                <div className="flex flex-col gap-2">
-                    <label htmlFor="message" className='flex items-end gap-2 text-lg font-bold'>Message
+                <div className="form-group">
+                    <label htmlFor="message" className='label'>Message <span>*</span>
                         <span className='text-base text-red-700'>{contactErrors?.message?.message}</span></label>
                     <textarea className='py-4 text-lg font-bold h-32 text-dark placeholder:text-dark/50' id="message" placeholder='Enter your message here...' required {...contactRegister('message')} />
                 </div>
-                {isContactSubmitting ? <div className="flex flex-col items-start justify-between gap-8 xl:mt-4 xl:gap-0 xl:flex-row form-group">
-                    <button type='submit' className='btn-medium bg-dark/80 text-light flex items-center'>
+                {isContactSubmitting ? <div className="form-group-button">
+                    <button type='button' className='btn-medium bg-dark/80 text-light flex items-center'>
                         <svg className="mr-3 h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
                         <span>Sending...</span>
                     </button>
-                </div> : <div className="flex flex-col items-start justify-between gap-8 xl:mt-4 xl:gap-0 xl:flex-row form-group">
+                </div> : <div className="form-group-button">
                     <button type='submit' className='btn-medium bg-dark text-light flex items-center'>
                         <span>Send Message</span>
                     </button>

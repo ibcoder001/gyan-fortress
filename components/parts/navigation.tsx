@@ -25,10 +25,10 @@ const Navigation = ({ numberOfUsers }: { numberOfUsers: number; }) => {
             <li className='w-full text-center'><Link onClick={openMobileNavigation} href='/contact' className={`${activeLink === '/contact' ? "font-semibold" : ""} link`}>Contact Me</Link></li>
             <li className='w-full text-center flex justify-center gap-4 items-center'>
                 <button className='btn-small border-2 px-[1.4rem] py-[0.9rem] border-dark text-dark font-bold'>
-                    <Link href="/">Sign In</Link>
+                    <Link href="/auth/login">Sign In</Link>
                 </button>
                 <button className='btn-small gradient-highlight'>
-                    <Link href="/">Sign Up</Link>
+                    <Link href="/auth/signup">Sign Up</Link>
                 </button>
             </li>
         </ul>

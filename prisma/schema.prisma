@@ -10,11 +10,128 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  username          String  @unique
-  email             String  @unique
-  signForNewsLetter Boolean @default(true)
-  web3Id            String? @unique @default(cuid())
+enum Role {
+  admin
+  user
+  creator
+}
+
+model user {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  username          String    @unique
+  role              Role      @default(user)
+  email             String    @unique
+  email_verified    Boolean   @default(false)
+  password          String
+  provider          String    @default("local")
+  name              String?
+  age               Int?      @db.Int
   imageUrl          String?
+  dob               DateTime?
+  twitter           String?
+  linkedIn          String?
+  person_verified   Boolean   @default(false)
+  signForNewsLetter Boolean   @default(true)
+  ethId             String?
+  solId             String?
+  maticId           String?
+  book              book[]
+  review            review[]
+  order             order[]
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+}
+
+enum Categories {
+  books
+  scientific_papers
+  video_tutorial
+}
+
+model category {
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  name       Categories @default(books)
+  book       book[]
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+}
+
+model review {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  user       user     @relation(fields: [userId], references: [id])
+  userId     String   @db.ObjectId
+  book       book     @relation(fields: [bookId], references: [id])
+  bookId     String   @db.ObjectId
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+enum BookType {
+  reading
+  watching
+}
+
+enum Genre {
+  basic
+  philosophy
+  engineering
+  commerce
+  science
+}
+
+enum Format {
+  digital
+  paperback
+  hardcover
+}
+
+model book {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  type             BookType @default(reading)
+  title            String
+  description      String
+  author           user     @relation(fields: [userId], references: [id])
+  userId           String   @db.ObjectId
+  price            Float    @db.Double
+  publisher        String   @default("self")
+  publication_date DateTime @default(now())
+  genre            Genre    @default(basic)
+  isbn             String?
+  page_count       Int?     @db.Int
+  rating           Float    @db.Double
+  reviews          review[]
+  language         String   @default("english")
+  format           Format   @default(digital)
+  categories       category @relation(fields: [categoryId], references: [id])
+  categoryId       String   @db.ObjectId
+  order            order[]
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+}
+
+model order {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  user           user     @relation(fields: [userId], references: [id])
+  userId         String   @db.ObjectId
+  book           book     @relation(fields: [bookId], references: [id])
+  bookId         String   @db.ObjectId
+  transaction_id String?
+  order_date     DateTime @default(now())
+  subtotal       Float    @db.Double
+  tax            Float    @db.Double
+  total_price    Float    @db.Double
+  refund         refund[]
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+}
+
+model refund {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  order          order    @relation(fields: [orderId], references: [id])
+  orderId        String   @db.ObjectId
+  transaction_id String?
+  refund_date    DateTime @default(now())
+  refund_reason  String
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
 }
