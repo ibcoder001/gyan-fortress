@@ -9,11 +9,11 @@ const Page = ({ params }: TAuthParams) => {
     return <Form type={slug[0]} />;
 };
 
-// export async function generateStaticParams() {
-//     return [
-//         { slug: ['login'] },
-//         { slug: ['signup'] }
-//     ];
-// }
+export async function generateStaticParams() {
+    return [
+        { slug: ['login'] },
+        { slug: ['signup'] }
+    ];
+}
 
 export default Page;
