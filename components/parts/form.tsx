@@ -1,5 +1,4 @@
-'use client';
-
+'use client';;
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -8,9 +7,10 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import { Heading, Paragraph } from '../styled/typography';
-import { MediumButton } from '../styled/button';
+import { Heading } from '../styled/typography';
 import Image from 'next/image';
+import Link from 'next/link';
+import bcrypt from 'bcryptjs';
 
 
 const emailProviders = ["gmail.com", "outlook.com", "yahoo.com", "zoho.com", "protonmail.com", "aol.com", "yandex.com", "icloud.com", "fastmail.com", "gmx.com"];
@@ -54,7 +54,6 @@ type TLoginVerificationFormSchema = z.infer<typeof loginVerificationFormSchema>;
 type TContactMeFormSchema = z.infer<typeof contactMeFormSchema>;
 
 const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | "loginVerification"; }) => {
-
     const navigator = useRouter();
 
     const [formType, setFormType] = useState<"signup" |
@@ -77,15 +76,16 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
     const onSignUpSubmit: SubmitHandler<TSignUpFormSchema> = async (data) => {
         const sanitizedData = {
             username: sanitize(data.username),
-            email: sanitize(data.email)
+            email: sanitize(data.email),
+            password: sanitize(data.password)
         };
 
         if (!checkEmailValid(sanitizedData.email)) {
             setSignUpEmailError(`Supported email providers are ${emailProviders.join(', ')}`);
             return;
         }
-
-        const userData = { ...sanitizedData, signForNewsLetter: data.signForNewsLetter };
+        const hashPassword = await bcrypt.hash(sanitizedData.password, process.env.NEXT_PUBLIC_HASH_SALT!);
+        const userData = { ...sanitizedData, password: hashPassword, signForNewsLetter: data.signForNewsLetter };
         try {
             await axios.post("/api/users/signup", { ...userData });
             signUpReset();
@@ -112,11 +112,12 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
 
     const onLoginUpSubmit: SubmitHandler<TLoginFormSchema> = async (data) => {
         const sanitizedData = { email: sanitize(data.email), password: sanitize(data.password || "") };
-        const userData = { ...sanitizedData };
+        const hashPassword = await bcrypt.hash(sanitizedData.password, process.env.NEXT_PUBLIC_HASH_SALT!);
+        const userData = { ...sanitizedData, password: hashPassword };
         try {
-            const res = await axios.post("/api/users/login", { ...userData });
-            console.log(res);
+            const { data: user } = await axios.post("/api/users/login", { ...userData });
             loginReset();
+            console.log(user?.user?.username);
             if (!userData.password) {
                 toast.success("Login code sent to your email", {
                     id: "login-success",
@@ -127,7 +128,7 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
                     }
                 });
             } else {
-                toast.success(`Welcome back ${res}`, {
+                toast.success(`Welcome back ${user?.user?.username}`, {
                     id: "login-success",
                     className: "border-none w-max-content h-auto py-4 px-4 text-xl",
                     ariaProps: {
@@ -208,7 +209,7 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
     let formContent = <></>;
 
     if (formType === "signup") {
-        formContent = <section className='flex flex-col items-center jusitfy-center w-full px-4 h-full py-12 max-w-3xl lg:max-w-5xl mx-auto'>
+        formContent = <section className='flex flex-col items-center justify-center w-full px-4 h-full py-12 max-w-3xl lg:max-w-5xl mx-auto'>
             <form onSubmit={signUpHandleSubmit(onSignUpSubmit)} className="form">
                 <h1 className="title w-full text-left mb-8">Sign Up</h1>
                 <section className='flex flex-col lg:flex-row gap-12'>
@@ -269,7 +270,7 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
                                 {isSignupSubmitting ? <div className="form-group-button w-full">
                                     <button type='button' className='btn-medium bg-dark/80 text-light flex items-center max-w-full w-full text-center'>
                                         <svg className="mr-3 h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                         </svg>
                                         <span className='w-full'>Please wait...</span>
@@ -291,7 +292,7 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
     }
 
     if (formType === "login") {
-        formContent = <section className='flex flex-col items-center jusitfy-center w-full px-4 h-full py-12 max-w-3xl lg:max-w-5xl mx-auto'>
+        formContent = <section className='flex flex-col items-center justify-center w-full px-4 h-full py-12 max-w-3xl lg:max-w-5xl mx-auto'>
             <form onSubmit={loginHandleSubmit(onLoginUpSubmit)} className="form">
                 <h1 className="title w-full text-left mb-8">Sign In</h1>
                 <section className='flex flex-col lg:flex-row gap-12'>
@@ -341,7 +342,7 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
                                 {isLoginSubmitting ? <div className="form-group-button w-full">
                                     <button type='button' className='btn-medium bg-dark/80 text-light flex items-center max-w-full w-full text-center'>
                                         <svg className="mr-3 h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                         </svg>
                                         <span className='w-full'>Please wait...</span>
@@ -376,9 +377,11 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
     }
 
     if (formType === "newsletter") {
-        formContent = <section className='py-8 xl:flex-1 xl:pl-16 xl:pr-0 xl:block'>
-            <Paragraph className='text-3xl'>Thank you! You will recieve product update every week for next 6 weeks!</Paragraph>
-            <MediumButton className='mt-4 bg-dark text-light' onClick={() => setFormType("login")}>Login here</MediumButton>
+        formContent = <section className='flex flex-col items-center justify-center w-full px-4 h-full py-12 max-w-3xl lg:max-w-5xl mx-auto gap-8'>
+            <p className='font-body text-2xl text-center'>Thank you! You will recieve product update every week for next 6 weeks!</p>
+            <button type='button' className='btn-medium bg-dark text-light flex items-center text-center'>
+                <Link href="/auth/login" className='w-full'>Login</Link>
+            </button>
         </section>;
     }
 
@@ -408,7 +411,7 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
                 {isContactSubmitting ? <div className="form-group-button">
                     <button type='button' className='btn-medium bg-dark/80 text-light flex items-center'>
                         <svg className="mr-3 h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
                         <span>Sending...</span>
@@ -425,4 +428,4 @@ const Form = ({ type }: { type: "signup" | "login" | "contact" | "newsletter" | 
     return formContent;
 };
 
-export default Form;;
+export default Form;

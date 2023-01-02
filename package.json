@@ -15,6 +15,7 @@
     "@prisma/client": "^4.8.0",
     "@vercel/analytics": "^0.1.6",
     "axios": "^1.2.1",
+    "bcryptjs": "^2.4.3",
     "csstype": "^3.0.10",
     "dompurify": "^2.4.1",
     "emailable": "^3.0.3",
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.3",
     "@types/bcrypt": "^5.0.0",
+    "@types/bcryptjs": "^2.4.2",
     "@types/dompurify": "^2.4.0",
     "@types/node": "18.11.17",
     "@types/react": "18.0.26",
