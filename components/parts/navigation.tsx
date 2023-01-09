@@ -1,5 +1,5 @@
 'use client';
-import { ShoppingBagIcon } from '@heroicons/react/24/outline';
+import { HiOutlineShoppingBag } from 'react-icons/hi2';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -25,7 +25,7 @@ const Navigation = ({ numberOfUsers }: { numberOfUsers: number; }) => {
             <li className='w-full text-center'><Link onClick={openMobileNavigation} href='/contact' className={`${activeLink === '/contact' ? "font-semibold" : ""} link`}>Contact Me</Link></li>
             <li className='w-full text-center flex justify-center gap-4 items-center'>
                 <Link href="/auth/login">
-                    <button className='btn-small border-2 px-[1.4rem] py-[0.9rem] border-dark text-dark font-bold' onClick={openMobileNavigation}>
+                    <button className='btn-small border-2 px-[1.4rem] py-[0.9rem] bg-light border-dark text-dark font-bold' onClick={openMobileNavigation}>
                         Sign In
                     </button>
                 </Link>
@@ -55,7 +55,7 @@ const Navigation = ({ numberOfUsers }: { numberOfUsers: number; }) => {
             <nav className='flex items-end gap-2 xl:hidden'>
                 <Link href="/cart">
                     <li className='relative flex items-center gap-1 mr-6'>
-                        <ShoppingBagIcon className="w-6 h-6 text-dark" />
+                        <HiOutlineShoppingBag className="w-6 h-6 text-dark" />
                         <span className='absolute flex items-center justify-center w-6 h-6 text-xs rounded-full bg-highlight font-bold text-dark top-[-6px] right-[-12px]'>{0}</span>
                     </li>
                 </Link>

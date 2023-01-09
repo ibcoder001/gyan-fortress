@@ -17,29 +17,41 @@ enum Role {
 }
 
 model user {
-  id                String    @id @default(auto()) @map("_id") @db.ObjectId
-  username          String    @unique
-  role              Role      @default(user)
-  email             String    @unique
-  email_verified    Boolean   @default(false)
-  password          String
-  provider          String    @default("local")
-  name              String?
-  age               Int?      @db.Int
-  imageUrl          String?
-  dob               DateTime?
-  twitter           String?
-  linkedIn          String?
-  person_verified   Boolean   @default(false)
-  signForNewsLetter Boolean   @default(true)
-  ethId             String?
-  solId             String?
-  maticId           String?
-  book              book[]
-  review            review[]
-  order             order[]
-  created_at        DateTime  @default(now())
-  updated_at        DateTime  @updatedAt
+  id                       String    @id @default(auto()) @map("_id") @db.ObjectId
+  username                 String    @unique
+  role                     Role      @default(user)
+  email                    String    @unique
+  email_verification_token String?   @unique
+  email_verified           Boolean   @default(false)
+  password                 String
+  provider                 String    @default("local")
+  name                     String?
+  age                      Int?      @db.Int
+  imageUrl                 String?
+  dob                      DateTime?
+  twitter                  String?
+  linkedIn                 String?
+  person_verified          Boolean   @default(false)
+  sign_for_news_letter     Boolean   @default(true)
+  ethId                    String?
+  solId                    String?
+  maticId                  String?
+  book                     book[]
+  review                   review[]
+  order                    order[]
+  created_at               DateTime  @default(now())
+  updated_at               DateTime  @updatedAt
+}
+
+model contact {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  email      String
+  subject    String
+  message    String
+  resolved   Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 enum Categories {

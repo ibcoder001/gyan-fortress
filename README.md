@@ -6,10 +6,10 @@ The project aims to make the great technical books available for low prices to t
 
 - [x] Design all main pages in Figma: [Gyan Fortress Figma Design](https://www.figma.com/file/hCfB0smNVJLwwDHjgedSJm/Book-Store?node-id=0%3A1&t=JCQBMS4q1uzpzwFE-1)
 
-- [ ] Code the main pages using NextJS 13, Tailwindcss, etc.
+- [x] Code the main pages using NextJS 13, Tailwindcss, etc.
 - [ ] Add Sign-up, Login, Contact Me, Forgot password functionalities in the site.
-- [ ] Enable product newsletter during sign-up
-- [ ] Explain what the project is in the About Section.
+- [x] Enable product newsletter during sign-up
+- [x] Explain what the project is in the About Section.
 - [ ] Make the account dashboard with the feature to upload the book.
 - [ ] Create a Book listing page
 - [ ] More to add here later...
