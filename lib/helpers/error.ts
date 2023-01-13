@@ -1,3 +1,1 @@
-function nothing() {}
-
-export default nothing;
+export {}
