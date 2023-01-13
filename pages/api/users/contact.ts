@@ -18,7 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 });
             }
             const { contactForm, error } = await submitContactForm({ name, email, subject, message });
-            if (error) {
+            if (error || !contactForm) {
                 return res.status(error?.code || 404).json({
                     success: false,
                     code: error?.code || 404,
