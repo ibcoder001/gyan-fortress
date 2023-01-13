@@ -1,42 +1,93 @@
-import { createUser, getUserByEmail } from '@lib/prisma/user';
-import bcrypt from 'bcryptjs';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import bcrypt from 'bcryptjs';
+import { TSignUpFormDBSchema } from "@lib/types/form";
+import { createUser, getUserByEmail, getUserByUsername } from '@lib/prisma/user';
+import { emailVerificationMessage, sendEmail } from "@lib/utils/sendgrid";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === "POST") {
         try {
-            const email = req.body?.email;
-            const { user: existingUser } = await getUserByEmail(email);
-            if (existingUser) throw new Error("Email already exists!");
-            const hashPassword = await bcrypt.hash(req.body?.password, process.env.SERVER_HASH_SALT!);
-            const userData = { ...req.body, password: hashPassword };
-            const { user, error } = await createUser(userData);
-            if (error) throw new Error(error);
-            return res.status(201).json({ user });
-            if (userData?.signUpVerified) {
-                const { user, error } = await createUser(userData);
-                if (error) throw new Error(error);
-                return res.status(201).json({ user });
-            } else {
-                // send sign-up-verification code to user's email using nodemailer
-                return res.status(200).json({
-                    message: "Verification code sent to the provided email!"
+            const username = req.body?.username as string;
+            const email = req.body?.email as string;
+            const password = req.body?.password as string;
+
+            if (!username || !email || !password) {
+                return res.status(400).json({
+                    success: false,
+                    code: 500,
+                    message: "Bad request"
                 });
             }
+
+            const { user: existingUsername } = await getUserByUsername(username);
+
+            if (existingUsername) {
+                return res.status(422).json({
+                    success: false,
+                    code: 422,
+                    message: "Username already exists!"
+                });
+            }
+
+            const { user: existingEmail } = await getUserByEmail(email);
+
+            if (existingEmail) {
+                return res.status(422).json({
+                    success: false,
+                    code: 422,
+                    message: "User already exists!"
+                });
+            }
+
+            const hashPassword = await bcrypt.hash(password, process.env.SERVER_HASH_SALT!);
+            const emailToken = await bcrypt.hash(req.body?.username, process.env.SERVER_HASH_SALT!);
+            const userData = {
+                username: req.body?.username,
+                email: req.body?.email,
+                password: hashPassword,
+                email_verification_token: emailToken,
+                sign_for_news_letter: req.body?.signForNewsLetter
+            } as TSignUpFormDBSchema;
+
+            const { user, error } = await createUser(userData);
+
+            if (error) {
+                return res.status(error?.code || 404).json({
+                    success: false,
+                    code: error?.code || 404,
+                    message: error?.message || "Sign up failed! Please try again."
+                });
+            }
+
+            // Send email to the user's email using nodemailer
+            const sendingMessage = emailVerificationMessage(user?.email!, user?.username!, user?.email_verification_token!);
+            console.log(sendingMessage);
+            const statusCode = await sendEmail(sendingMessage);
+            console.log(statusCode);
+            if (statusCode === 202) {
+                return res.status(201).json({
+                    status: 201,
+                    message: "Email verification code sent to your email. Please verify to login!"
+                });
+            }
+            return res.status(201).json({
+                status: 201,
+                message: "Email verification code sent to your email. Please verify to login!"
+            });
         } catch (error: any) {
             return res.status(error?.code || 500).json({
-                error: {
-                    code: error?.code,
-                    meta: error?.meta,
-                    message: error?.message,
-                    clientVersion: error?.clientVersion,
-                    stack: error?.stack
-                }
+                success: false,
+                code: error.code,
+                message: error.message
             });
         }
     }
     res.setHeader('Allow', ['POST']);
-    res.status(425).end(`Method ${req.method} is not allowed for sign-up`);
+    return res.status(425).json({
+        success: false,
+        code: 425,
+        message: `Method ${req.method} is not allowed for sign-up`
+    });
 };
 
 export default handler;
