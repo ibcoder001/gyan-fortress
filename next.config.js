@@ -6,11 +6,11 @@ const nextConfig = {
   },
   images: {
     domains: [
-      'lh3.googleusercontent.com',
-      'pbs.twimg.com',
-      'avatars.githubusercontent.com',
+      "lh3.googleusercontent.com",
+      "pbs.twimg.com",
+      "avatars.githubusercontent.com",
     ],
-    formats: ['image/avif', 'image/webp'],
+    formats: ["image/avif", "image/webp"],
   },
 };
 
