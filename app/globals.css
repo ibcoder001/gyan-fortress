@@ -1,5 +1,5 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto:wght@500;700;900&display=swap'); */
-@import url('https://fonts.googleapis.com/css2?family=Libre+Caslon+Text&family=Montserrat:wght@500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Libre+Caslon+Text&family=Montserrat:wght@500;600&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -20,44 +20,53 @@
     @apply h-full scroll-smooth antialiased;
   }
 
-  body {
+  body,
+  .body {
     @apply flex h-full flex-col;
   }
 
-  main {
+  .body > .main {
     @apply flex-1;
   }
 
   .title {
-    @apply text-4xl leading-tight font-heading md:text-center md:text-6xl md:leading-tight lg:text-6xl lg:text-center lg:leading-tight;
+    @apply text-5xl leading-[1.125]  md:text-center md:text-6xl md:leading-tight lg:text-7xl lg:text-center lg:leading-tight;
+  }
+
+  .main-header-height {
+    @apply min-h-screen !important;
   }
 
   .subtitle {
-    @apply text-base md:text-2xl md:mt-0 mt-[-0.2rem] md:text-center lg:text-2xl lg:text-center;
+    @apply text-lg md:text-2xl md:mt-0 mt-[-0.2rem] md:text-center lg:text-2xl lg:text-center;
   }
 
   .btn-large {
-    @apply max-w-fit font-body font-bold uppercase text-lg lg:text-xl lg:px-8 lg:py-8 md:text-2xl md:px-10 md:py-10 px-8 py-6 shadow-xl rounded-sm hover:shadow-2xl;
+    @apply max-w-fit  font-bold uppercase text-lg lg:text-xl lg:px-8 lg:py-8 md:text-2xl md:px-10 md:py-10 px-8 py-6 rounded-md hover:shadow-lg;
   }
 
   .btn-medium {
-    @apply max-w-fit font-body font-bold uppercase text-lg px-8 py-6 shadow-xl rounded-sm hover:shadow-2xl;
+    @apply max-w-fit  font-bold uppercase text-lg px-8 py-6 rounded-md hover:shadow-md;
   }
 
   .btn-small {
-    @apply max-w-fit font-body uppercase text-sm px-6 py-4 shadow-xl rounded-sm hover:shadow-2xl;
+    @apply max-w-fit  uppercase text-sm px-6 py-4 rounded-md hover:shadow-sm;
   }
 
   .gradient-highlight {
-    @apply bg-gradient-to-br from-highlight to-dark text-light;
+    @apply bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-light;
+  }
+
+  .gradient-black {
+    @apply bg-gradient-to-r from-gray-700 via-gray-900 to-black;
   }
 
   .gradient-text {
-    @apply bg-gradient-to-br from-highlight to-dark text-transparent bg-clip-text font-bold;
+    @apply bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-transparent bg-clip-text font-bold;
   }
 
   .link {
-    @apply uppercase font-body text-sm hover:font-semibold;
+    @apply uppercase font-semibold text-3xl lg:text-sm hover:underline text-dark/50;
   }
 
   .form {
