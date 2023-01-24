@@ -8,7 +8,7 @@ import { authOptions } from "pages/api/auth/[...nextauth]";
 const Header = async () => {
   const session = await unstable_getServerSession(authOptions);
   return (
-    <header className="fixed flex items-center justify-center w-full h-24 px-4 bg-white">
+    <header className="fixed flex items-center justify-center w-full h-24 px-4 bg-light">
       <Container className="flex items-center justify-between w-full">
         <section className="flex items-center justify-between flex-1 lg:gap-20 lg:justify-start">
           <Logo />

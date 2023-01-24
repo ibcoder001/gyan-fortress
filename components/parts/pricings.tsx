@@ -49,9 +49,9 @@ const PricingCards = ({
   features: { mark: JSX.Element; name: string }[];
 }) => {
   return (
-    <div className="flex flex-col justify-start flex-1 w-full h-full px-8 py-12 rounded-md shadow-lg min-w-96 gradient-black">
+    <div className="flex flex-col justify-start flex-1 h-full px-8 py-12 rounded-md shadow-lg w-96 min-w-96 gradient-black">
       <p className="mb-4 text-xl font-medium text-gray-50">{title}</p>
-      <p className="text-3xl font-bold text-white">
+      <p className="text-3xl font-bold text-light">
         {currency}
         {price}
         <span className="text-sm text-gray-300">/ month</span>
@@ -76,7 +76,7 @@ const PricingCards = ({
         className={`btn-medium w-full ${
           title === "Member" || title === "Pro Member"
             ? "gradient-highlight"
-            : "bg-white text-dark"
+            : "bg-light text-dark"
         }`}
       >
         {title === "Free" ? "Get started" : "Choose Plan"}
@@ -121,11 +121,11 @@ const authorFeaturesFree = [
     mark: <FeatureAvailable />,
   },
   {
-    name: "Upto 100 sale per book",
+    name: "Upto 100 sale per book with 100% profits",
     mark: <FeatureAvailable />,
   },
   {
-    name: "Keep 70% of your profits on each sale",
+    name: "Keep 70% of your profits after 100 sales",
     mark: <FeatureAvailable />,
   },
 ];
@@ -171,7 +171,7 @@ const Pricings = () => {
 
   if (role === "users") {
     content = (
-      <div className="flex flex-col items-center justify-between w-auto gap-8 px-8 text-white md:flex-row">
+      <div className="flex flex-col items-center justify-between w-full gap-8 px-8 text-light md:flex-row">
         <PricingCards
           title="Free"
           currency="$"
@@ -190,7 +190,7 @@ const Pricings = () => {
     );
   } else if (role === "authors") {
     content = (
-      <div className="flex flex-col items-center justify-between gap-8 px-8 text-white md:flex-row">
+      <div className="flex flex-col items-center justify-between gap-8 px-8 text-light md:flex-row">
         <PricingCards
           title="Free"
           currency="$"
@@ -218,7 +218,7 @@ const Pricings = () => {
 
   return (
     <Fragment>
-      <div className="flex px-8 py-6 text-white rounded-md gradient-black">
+      <div className="flex px-8 py-6 text-light rounded-md gradient-black">
         <button
           className={`btn-small ${role === "users" ? "bg-gray-600" : ""}`}
           onClick={() => handleRoleSwitch("users")}

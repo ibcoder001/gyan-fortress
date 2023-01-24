@@ -36,7 +36,7 @@ const MenuNavigation = ({
         <li className="relative flex items-center gap-1 mr-6">
           <span className="font-bold uppercase text-md">Cart</span>
           <HiOutlineShoppingBag className="w-6 h-6 text-dark" />
-          <span className="absolute flex items-center justify-center w-6 h-6 text-xs rounded-full gradient-highlight text-white font-bold top-[-6px] right-[-12px]">
+          <span className="absolute flex items-center justify-center w-6 h-6 text-xs rounded-full gradient-highlight text-light font-bold top-[-6px] right-[-12px]">
             {numberOfItems}
           </span>
         </li>
@@ -46,7 +46,7 @@ const MenuNavigation = ({
         onClick={handleMenuNavigation}
       />
       <ul
-        className={`fixed grid place-content-center gap-2 lg:gap-0 text-center lg:text-left lg:relative lg:flex lg:min-h-0 lg:space-y-0 lg:space-x-6 lg:p-0 lg:translate-y-0 lg:top-0 right-0 left-0 min-h-screen space-y-4 top-16 bg-white py-8 px-4 transform ${
+        className={`fixed grid place-content-center gap-2 lg:gap-0 text-center lg:text-left lg:relative lg:flex lg:min-h-0 lg:space-y-0 lg:space-x-6 lg:p-0 lg:translate-y-0 lg:top-0 right-0 left-0 min-h-screen space-y-4 top-16 bg-light py-8 px-4 transform ${
           isMenuOpen ? "translate-y-0" : "translate-y-full"
         } transition duration-300`}
       >

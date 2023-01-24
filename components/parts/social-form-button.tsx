@@ -15,15 +15,17 @@ const SocialFormButton = ({
   return (
     <button
       type="button"
-      className="flex flex-row items-center justify-start w-auto h-24 p-1 bg-white rounded-md cursor-pointer hover:shadow-2xl"
+      className="flex flex-row items-center justify-center w-20 h-20 p-1 bg-transparent cursor-pointer hover:shadow-2xl"
       onClick={() => signIn(provider, { callbackUrl })}
     >
       <Image
         src={imageUrl}
-        width={96}
-        height={96}
+        width={64}
+        height={64}
         alt={imageAlt}
-        className="object-contain ml-2"
+        className={`object-contain ${
+          provider === "github" ? "rounded-full bg-light" : ""
+        }`}
       />
     </button>
   );

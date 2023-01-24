@@ -18,6 +18,7 @@ import bcrypt from "bcryptjs";
 import { sanitize } from "dompurify";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -28,10 +29,16 @@ import {
   FaTwitter,
   FaYoutube,
 } from "react-icons/fa";
-import { HiAtSymbol, HiFingerPrint, HiOutlineUser } from "react-icons/hi2";
+import {
+  HiArrowLeft,
+  HiAtSymbol,
+  HiFingerPrint,
+  HiOutlineUser,
+} from "react-icons/hi2";
 import { Heading } from "../styled/typography";
 import InputField from "./input-field";
 import SocialFormButton from "./social-form-button";
+import SubmitButton from "./submit-button";
 
 const emailProviders = [
   "gmail.com",
@@ -157,15 +164,11 @@ const Form = ({
       signForNewsLetter: data.signForNewsLetter,
     };
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_CALLBACK_URL}/api/users/signup`,
-        { ...userData }
-      );
+      const response = await axios.post("/api/users/signup", { ...userData });
       const data = response.data;
-      // signUpReset();
-      console.log(data);
+      signUpReset();
       toastMessage("success", data?.message, "sign-up-success");
-      // setFormType("login");
+      setFormType("login");
     } catch (error: any) {
       console.log(error);
       toastMessage("error", error?.response?.data?.message, "sign-up-failed");
@@ -187,7 +190,6 @@ const Form = ({
         ...userData,
       });
       loginReset();
-      console.log(user?.user?.username);
       if (!userData.password) {
         toastMessage(
           "success",
@@ -280,8 +282,8 @@ const Form = ({
         className="h-full p-0 form"
       >
         <section className="flex flex-col h-full md:flex-row">
-          <section className="flex flex-col justify-center flex-1 gap-4 px-8 text-white gradient-black">
-            <div className="flex items-center justify-center gap-2">
+          <section className="flex flex-col justify-center flex-1 gap-4 py-12 text-light gradient-black lg:py-0">
+            <div className="flex items-center justify-center order-3 gap-2 mx-auto md:order-1 lg:w-3/4">
               <SocialFormButton
                 provider="google"
                 callbackUrl={process.env.NEXT_PUBLIC_CALLBACK_URL!}
@@ -300,15 +302,9 @@ const Form = ({
                 imageUrl="/assets/github/github-mark.svg"
                 imageAlt="Sign up with GitHub"
               />
-              <SocialFormButton
-                provider="google"
-                callbackUrl={process.env.NEXT_PUBLIC_CALLBACK_URL!}
-                imageUrl="/assets/google/btn_google_light_normal_ios.svg"
-                imageAlt="Sign up with Google"
-              />
             </div>
-            <span>or</span>
-            <div className="form-group">
+            <hr className="order-2 h-px my-8 bg-gray-700 border-0 md:order-2" />
+            <div className="order-1 px-8 mx-auto lg:px-0 lg:w-3/4 form-group md:order-3">
               <InputField
                 inputId="username"
                 label="Username"
@@ -323,73 +319,62 @@ const Form = ({
                 inputId="email"
                 label="Email"
                 inputName="email"
-                inputPlaceholder="ibcoder001"
+                inputPlaceholder="vasudeveloper001@gmail.com"
                 inputType="email"
                 register={signUpRegister}
                 error={signUpErrors?.email?.message || ""}
                 emailError={signUpEmailError}
                 icon={<HiAtSymbol className="w-6 h-6 text-dark" />}
               />
-              <div className="relative form-group">
-                <label htmlFor="password" className="label">
-                  Password <span>*</span>
-                  <span className="text-base text-red-700">
-                    {signUpErrors?.password?.message}
+              <InputField
+                inputId="password"
+                label="Password"
+                inputName="password"
+                inputPlaceholder="********"
+                inputType={showPassword.password ? "text" : "password"}
+                register={signUpRegister}
+                error={signUpErrors?.password?.message || ""}
+                passwordElement={
+                  <span
+                    className="absolute right-0 flex items-center pr-4 cursor-pointer top-16 bottom-8"
+                    onClick={() =>
+                      setShowPassword({
+                        ...showPassword,
+                        password: !showPassword.password,
+                      })
+                    }
+                  >
+                    <HiFingerPrint className="w-6 h-6 text-dark" />
                   </span>
-                </label>
-                <input
-                  type={showPassword.password ? "text" : "password"}
-                  className="py-4 text-formText text-dark placeholder:text-dark/50"
-                  id="password"
-                  placeholder="********"
-                  required
-                  {...signUpRegister("password")}
-                />
-                <span
-                  className="absolute right-0 flex items-center pr-4 cursor-pointer top-16 bottom-8"
-                  onClick={() =>
-                    setShowPassword({
-                      ...showPassword,
-                      password: !showPassword.password,
-                    })
-                  }
-                >
-                  <HiFingerPrint className="w-6 h-6" />
-                </span>
-              </div>
-              <div className="relative form-group">
-                <label htmlFor="confirm-password" className="label">
-                  Confirm Password <span>*</span>
-                  <span className="text-base text-red-700">
-                    {signUpErrors?.password?.message}
+                }
+              />
+              <InputField
+                inputId="confirm-password"
+                label="Confirm Password"
+                inputName="confirmPassword"
+                inputPlaceholder="********"
+                inputType={showPassword.confirmPassword ? "text" : "password"}
+                register={signUpRegister}
+                error={signUpErrors?.confirmPassword?.message || ""}
+                passwordElement={
+                  <span
+                    className="absolute right-0 flex items-center pr-4 cursor-pointer top-16 bottom-8 text-light"
+                    onClick={() =>
+                      setShowPassword({
+                        ...showPassword,
+                        confirmPassword: !showPassword.confirmPassword,
+                      })
+                    }
+                  >
+                    <HiFingerPrint className="w-6 h-6 text-dark" />
                   </span>
-                </label>
-                <input
-                  type={showPassword.confirmPassword ? "text" : "password"}
-                  className="py-4 text-formText text-dark placeholder:text-dark/50"
-                  id="confirm-password"
-                  placeholder="********"
-                  required
-                  {...signUpRegister("confirmPassword")}
-                />
-                <span
-                  className="absolute right-0 flex items-center pr-4 cursor-pointer top-16 bottom-8"
-                  onClick={() =>
-                    setShowPassword({
-                      ...showPassword,
-                      confirmPassword: !showPassword.confirmPassword,
-                    })
-                  }
-                >
-                  <HiFingerPrint className="w-6 h-6" />
-                </span>
-              </div>
+                }
+              />
               <div className="form-group">
                 <label className="items-center my-4 text-base font-normal cursor-pointer label">
                   <input
                     type="checkbox"
                     className="w-6 h-6 cursor-pointer text-dark focus:text-dark"
-                    checked={true}
                     id="signForNewsLetter"
                     {...signUpRegister("signForNewsLetter")}
                   />{" "}
@@ -397,58 +382,32 @@ const Form = ({
                 </label>
               </div>
               <div className="items-start gap-4 form-group">
-                {isSignupSubmitting ? (
-                  <div className="w-full form-group-button">
-                    <button
-                      type="button"
-                      className="flex items-center w-full max-w-full text-center btn-medium bg-dark/80 text-light"
-                    >
-                      <svg
-                        className="w-5 h-5 mr-3 text-white animate-spin"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      <span className="w-full">Please wait...</span>
-                    </button>
-                  </div>
-                ) : (
-                  <div className="w-full form-group-button">
-                    <button
-                      type="submit"
-                      className="flex items-center w-full max-w-full text-center btn-medium bg-dark text-light"
-                    >
-                      <span className="w-full">Sign Up</span>
-                    </button>
-                  </div>
-                )}
+                <SubmitButton
+                  isSubmitting={isSignupSubmitting}
+                  cta={"Sign Up"}
+                />
                 <div className="flex flex-col items-end justify-end gap-4">
                   <span
                     className="cursor-pointer text-formText"
                     onClick={() => changeFormType({ type: "login" })}
                   >
                     Already a member?{" "}
-                    <span className="font-semibold">Login</span>
+                    <span className="font-semibold gradient-text">Login</span>
                   </span>
                 </div>
+                <Link
+                  href={"/"}
+                  className={
+                    "flex items-center justify-center gap-2 text-light/40 hover:text-light"
+                  }
+                >
+                  <HiArrowLeft />
+                  <span>Back to Home</span>
+                </Link>
               </div>
             </div>
           </section>
-          <section className="flex flex-col items-center justify-center flex-1 h-full gap-4 gradient-highlight">
+          <section className="flex-col items-center justify-center flex-1 hidden h-full gap-4 lg:flex gradient-highlight">
             <h1 className="w-full font-bold text-center title">Sign Up</h1>
           </section>
         </section>
@@ -518,7 +477,7 @@ const Form = ({
                         className="flex items-center w-full max-w-full text-center btn-medium bg-dark/80 text-light"
                       >
                         <svg
-                          className="w-5 h-5 mr-3 text-white animate-spin"
+                          className="w-5 h-5 mr-3 text-light animate-spin"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
@@ -566,7 +525,7 @@ const Form = ({
               <div className="grid grid-cols-1 gap-2 place-content-center place-items-center">
                 <button
                   type="button"
-                  className="flex flex-row items-center justify-start w-full p-1 bg-white rounded-sm shadow-xl cursor-pointer hover:shadow-2xl"
+                  className="flex flex-row items-center justify-start w-full p-1 rounded-sm shadow-xl cursor-pointer bg-light hover:shadow-2xl"
                   onClick={() =>
                     signIn("google", {
                       callbackUrl: process.env.NEXT_PUBLIC_CALLBACK_URL,
@@ -586,7 +545,7 @@ const Form = ({
                 </button>
                 <button
                   type="button"
-                  className="flex flex-row items-center justify-start w-full p-2 bg-white rounded-sm shadow-xl cursor-pointer hover:shadow-2xl"
+                  className="flex flex-row items-center justify-start w-full p-2 rounded-sm shadow-xl cursor-pointer bg-light hover:shadow-2xl"
                   onClick={() =>
                     signIn("twitter", {
                       callbackUrl: process.env.NEXT_PUBLIC_CALLBACK_URL,
@@ -606,7 +565,7 @@ const Form = ({
                 </button>
                 <button
                   type="button"
-                  className="flex flex-row items-center justify-start w-full p-2 bg-white rounded-sm shadow-xl cursor-pointer hover:shadow-2xl"
+                  className="flex flex-row items-center justify-start w-full p-2 rounded-sm shadow-xl cursor-pointer bg-light hover:shadow-2xl"
                 >
                   <Image
                     src="/assets/github/github-mark.svg"
@@ -807,7 +766,7 @@ const Form = ({
                     className="flex items-center btn-medium bg-dark/10 text-dark"
                   >
                     <svg
-                      className="w-5 h-5 mr-3 text-white animate-spin"
+                      className="w-5 h-5 mr-3 text-light animate-spin"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
