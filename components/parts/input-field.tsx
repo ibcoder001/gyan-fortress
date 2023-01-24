@@ -8,6 +8,7 @@ const InputField = ({
   inputType,
   inputPlaceholder,
   icon,
+  passwordElement,
 }: {
   label: string;
   error: string;
@@ -17,7 +18,8 @@ const InputField = ({
   inputId: string;
   inputType: string;
   inputPlaceholder: string;
-  icon: any;
+  icon?: any;
+  passwordElement?: any;
 }) => {
   return (
     <div className="relative form-group">
@@ -36,9 +38,13 @@ const InputField = ({
       {inputType === "email" && (
         <span className="text-base text-red-700">{emailError}</span>
       )}
-      <span className="absolute right-0 flex items-center pr-4 top-16 bottom-8">
-        {icon}
-      </span>
+      {passwordElement ? (
+        <>{passwordElement}</>
+      ) : (
+        <span className="absolute right-0 flex items-center pr-4 top-16 bottom-8">
+          {icon}
+        </span>
+      )}
     </div>
   );
 };

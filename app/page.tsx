@@ -39,7 +39,7 @@ const Page = async () => {
           </Container>
           <section
             id="about"
-            className="flex items-start justify-center h-full min-h-full text-white lg:main-header-height gradient-black lg:items-center scroll-mt-24 lg:scroll-mt-12"
+            className="flex items-start justify-center h-full min-h-full text-light lg:main-header-height gradient-black lg:items-center scroll-mt-24 lg:scroll-mt-12"
           >
             <Container className="flex flex-col items-center justify-between gap-8 md:px-4 lg:px-0">
               <h1 className="hidden w-full pt-12 mb-4 font-bold text-center lg:pt-0 title md:block">
@@ -76,7 +76,7 @@ const Page = async () => {
           </section>
           <section
             id="pricing"
-            className="flex items-start justify-center h-full min-h-full pb-12 bg-white text-dark lg:main-header-height lg:items-center bg-hero-glamorous scroll-mt-24 lg:scroll-mt-12"
+            className="flex items-start justify-center h-full min-h-full pb-12 bg-light text-dark lg:main-header-height lg:items-center bg-hero-glamorous scroll-mt-24 lg:scroll-mt-12"
           >
             <Container className="flex flex-col items-center justify-between gap-8 md:px-4 lg:px-0">
               <h2 className="flex-1 w-full h-full min-h-full px-6 pt-12 font-bold text-center lg:rounded-md title gradient-text">
@@ -87,7 +87,7 @@ const Page = async () => {
           </section>
           <section
             id="contact-me"
-            className="h-full min-h-full text-white lg:main-header-height gradient-black scroll-mt-24 lg:scroll-mt-12"
+            className="h-full min-h-full text-light lg:main-header-height gradient-black scroll-mt-24 lg:scroll-mt-12"
           >
             <Container>
               <Form type="contact" />

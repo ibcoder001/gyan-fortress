@@ -1,5 +1,4 @@
-import SharedHead from "@/components/parts/SharedHead";
-import React from "react";
+import SharedHead from "@/components/parts/shared-head";
 
 export default function Head() {
   return (

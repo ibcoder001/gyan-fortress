@@ -20,7 +20,7 @@ const UserNavigation = ({
           <li className="relative flex items-center gap-1 mr-6">
             <span className="text-md uppercase font-bold">Cart</span>
             <HiOutlineShoppingBag className="w-6 h-6 text-dark" />
-            <span className="absolute flex items-center justify-center w-6 h-6 text-xs rounded-full gradient-highlight text-white font-bold top-[-6px] right-[-12px]">
+            <span className="absolute flex items-center justify-center w-6 h-6 text-xs rounded-full gradient-highlight text-light font-bold top-[-6px] right-[-12px]">
               {numberOfItems}
             </span>
           </li>

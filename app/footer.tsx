@@ -12,15 +12,15 @@ const Footer = () => {
   };
 
   return (
-    <footer className="px-4 bg-black">
+    <footer className="px-4 bg-dark">
       <Container className="flex items-center justify-between pt-8">
         <Logo />
         <HiOutlineArrowUpCircle
-          className="w-10 h-10 cursor-pointer text-white/30"
+          className="w-10 h-10 cursor-pointer text-light/30"
           onClick={scrollToTop}
         />
       </Container>
-      <section className="flex items-center justify-center pb-8 mt-4 text-sm font-bold text-center bg-black text-light md:text-base">
+      <section className="flex items-center justify-center pb-8 mt-4 text-sm font-bold text-center bg-dark text-light md:text-base">
         Copyright &copy; {new Date().getFullYear()} Saurabh Srivastava, IBCoder.
         All rights reserved.
       </section>

@@ -1,12 +1,12 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import bcrypt from "bcryptjs";
-import { TSignUpFormDBSchema } from "@lib/types/form";
 import {
   createUser,
   getUserByEmail,
   getUserByUsername,
 } from "@lib/prisma/user";
+import { TSignUpFormDBSchema } from "@lib/types/form";
 import { emailVerificationMessage, sendEmail } from "@lib/utils/sendgrid";
+import bcrypt from "bcryptjs";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
@@ -99,9 +99,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
   res.setHeader("Allow", ["POST"]);
-  return res.status(425).json({
+  return res.status(405).json({
     success: false,
-    code: 425,
+    code: 405,
     message: `Method ${req.method} is not allowed for sign-up`,
   });
 };
