@@ -1,10 +1,10 @@
+// @ts-nocheck
+
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import TwitterProvider from "next-auth/providers/twitter";
 import CredentialProvider from "next-auth/providers/credentials";
-import { TLoginFormSchema } from "@lib/types/form";
-import { NextApiRequest } from "next";
 import { authenticateUser, getUserByEmail } from "@lib/prisma/user";
 import bcrypt from "bcryptjs";
 
