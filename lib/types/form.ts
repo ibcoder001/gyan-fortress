@@ -26,6 +26,7 @@ export const signUpFormDBSchema = z.object({
 export const loginFormSchema = z.object({
   email: z.string().trim().email("Please enter valid email!"),
   password: z.string().trim().min(8).max(16),
+  rememberMe: z.boolean().default(false),
 });
 
 export const loginVerificationFormSchema = z.object({

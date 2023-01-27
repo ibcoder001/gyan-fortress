@@ -5,7 +5,8 @@
       "@/components/*": ["components/*"],
       "@lib/*": ["lib/*"],
       "@public/*": ["public/*"],
-      "@hooks/*": ["hooks/*"]
+      "@app/*": ["app/*"],
+      "@prisma": ["prisma/*"]
     },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
