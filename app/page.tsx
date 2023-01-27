@@ -10,7 +10,6 @@ import Header from "./header";
 
 const Page = async () => {
   const session = await unstable_getServerSession(authOptions);
-
   if (session) {
     return <Products />;
   }
@@ -18,7 +17,7 @@ const Page = async () => {
   return (
     <div className="body">
       {/*// @ts-ignore*/}
-      <Header />
+      <Header page={"home"} />
       <main id="home" className="main">
         <section className="flex flex-col">
           <Container className="flex flex-col items-center justify-center flex-1 gap-4 px-4 overflow-auto text-center main-header-height md:items-center lg:items-center md:py-8 lg:w-full">

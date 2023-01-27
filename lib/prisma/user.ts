@@ -52,6 +52,19 @@ export async function getUserByUsername(username: string) {
   }
 }
 
+export async function authenticateUser(
+  email: string,
+  password: string,
+  rememberMe: boolean
+) {
+  try {
+    const user = await prisma.user.findFirst({ where: { email, password } });
+    return { user };
+  } catch (error: any) {
+    return { error };
+  }
+}
+
 export async function verifyEmail(token: string) {
   try {
     const user = await prisma.user.findUnique({

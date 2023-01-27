@@ -39,6 +39,7 @@ import { Heading } from "../styled/typography";
 import InputField from "./input-field";
 import SocialFormButton from "./social-form-button";
 import SubmitButton from "./submit-button";
+import * as process from "process";
 
 const emailProviders = [
   "gmail.com",
@@ -175,35 +176,41 @@ const Form = ({
     }
   };
 
-  const onLoginUpSubmit: SubmitHandler<TLoginFormSchema> = async (data) => {
+  const onLoginSubmit: SubmitHandler<TLoginFormSchema> = async (data) => {
     const sanitizedData = {
       email: sanitize(data.email),
       password: sanitize(data.password || ""),
+      rememberMe: data.rememberMe,
     };
     const hashPassword = await bcrypt.hash(
       sanitizedData.password,
       process.env.NEXT_PUBLIC_HASH_SALT!
     );
-    const userData = { ...sanitizedData, password: hashPassword };
     try {
-      const { data: user } = await axios.post("/api/users/login", {
-        ...userData,
+      const status = await signIn("credentials", {
+        redirect: false,
+        email: sanitizedData.email,
+        password: hashPassword,
+        rememberMe: sanitizedData.rememberMe,
+        callbackUrl: process.env.NEXT_PUBLIC_CALLBACK_URL!,
       });
+      console.log(status);
       loginReset();
-      if (!userData.password) {
+      if (status?.ok === false) {
         toastMessage(
-          "success",
-          "Login code sent to your email",
-          "login-success"
-        );
-      } else {
-        toastMessage(
-          "success",
-          `Welcome back ${user?.user?.username}`,
-          "login-success"
+          "error",
+          `${
+            status?.error === "CredentialsSignin"
+              ? "Invalid username or password"
+              : "Some error occurred. Please try again!"
+          }`,
+          "login-error"
         );
       }
-      navigator.push("/");
+      if (status?.ok === true) {
+        toastMessage("success", `Welcome back`, "login-success");
+        navigator.push(status?.url || "/");
+      }
     } catch (error: any) {
       loginReset();
       toastMessage(
@@ -275,6 +282,122 @@ const Form = ({
 
   let formContent = <></>;
 
+  if (formType === "login") {
+    formContent = (
+      <form
+        onSubmit={loginHandleSubmit(onLoginSubmit)}
+        className="h-full p-0 form"
+      >
+        <section className="flex flex-col h-full md:flex-row">
+          <section className="flex flex-col justify-center flex-1 gap-4 py-12 text-light gradient-black lg:py-0">
+            <div className="flex items-center justify-center order-3 gap-2 mx-auto md:order-1 lg:w-3/4">
+              <SocialFormButton
+                provider="google"
+                callbackUrl={process.env.NEXT_PUBLIC_CALLBACK_URL!}
+                imageUrl="/assets/google/btn_google_light_normal_ios.svg"
+                imageAlt="Sign in with Google"
+              />
+              <SocialFormButton
+                provider="twitter"
+                callbackUrl={process.env.NEXT_PUBLIC_CALLBACK_URL!}
+                imageUrl="/assets/twitter/blue-logo.svg"
+                imageAlt="Sign in with Twitter"
+              />
+              <SocialFormButton
+                provider="github"
+                callbackUrl={process.env.NEXT_PUBLIC_CALLBACK_URL!}
+                imageUrl="/assets/github/github-mark.svg"
+                imageAlt="Sign in with GitHub"
+              />
+            </div>
+            <hr className="order-2 h-px my-8 bg-gray-700 border-0 md:order-2" />
+            <div className="order-1 px-8 lg:mx-auto lg:px-0 lg:w-3/4 form-group md:order-3">
+              <InputField
+                inputId="email"
+                label="Email"
+                inputName="email"
+                inputPlaceholder="vasudeveloper001@gmail.com"
+                inputType="email"
+                register={loginRegister}
+                error={loginErrors?.email?.message || ""}
+                emailError={signUpEmailError}
+                icon={<HiAtSymbol className="w-6 h-6 text-dark" />}
+              />
+              <InputField
+                inputId="password"
+                label="Password"
+                inputName="password"
+                inputPlaceholder="********"
+                inputType={showPassword.password ? "text" : "password"}
+                register={loginRegister}
+                error={loginErrors?.password?.message || ""}
+                passwordElement={
+                  <span
+                    className="absolute right-0 flex items-center pr-4 cursor-pointer top-16 bottom-8"
+                    onClick={() =>
+                      setShowPassword({
+                        ...showPassword,
+                        password: !showPassword.password,
+                      })
+                    }
+                  >
+                    <HiFingerPrint className="w-6 h-6 text-dark" />
+                  </span>
+                }
+              />
+              <div className="form-group">
+                <label className="items-center my-4 text-base font-normal cursor-pointer label">
+                  <input
+                    type="checkbox"
+                    className="w-6 h-6 cursor-pointer text-dark focus:text-dark"
+                    id="signForNewsLetter"
+                    {...loginRegister("rememberMe")}
+                  />{" "}
+                  <span>Remember me</span>
+                </label>
+              </div>
+              <div className="items-start gap-4 form-group">
+                <SubmitButton isSubmitting={isLoginSubmitting} cta={"Login"} />
+                <div className="flex flex-col items-end justify-end gap-4">
+                  <span
+                    className="cursor-pointer text-formText"
+                    onClick={() => changeFormType({ type: "signup" })}
+                  >
+                    New here?{" "}
+                    <span className="font-semibold gradient-text">Sign Up</span>
+                  </span>
+                </div>
+                <div className="flex flex-col items-end justify-end gap-4">
+                  <span
+                    className="cursor-pointer text-formText"
+                    onClick={() => changeFormType({ type: "forgotPassword" })}
+                  >
+                    Forgot password?{" "}
+                    <span className="font-semibold gradient-text">
+                      Reset Password
+                    </span>
+                  </span>
+                </div>
+                <Link
+                  href={"/"}
+                  className={
+                    "flex items-center justify-center gap-2 text-light/40 hover:text-light"
+                  }
+                >
+                  <HiArrowLeft />
+                  <span>Back to Home</span>
+                </Link>
+              </div>
+            </div>
+          </section>
+          <section className="flex-col items-center justify-center flex-1 hidden h-full gap-4 lg:flex gradient-highlight">
+            <h1 className="w-full font-bold text-center title">Login</h1>
+          </section>
+        </section>
+      </form>
+    );
+  }
+
   if (formType === "signup") {
     formContent = (
       <form
@@ -304,7 +427,7 @@ const Form = ({
               />
             </div>
             <hr className="order-2 h-px my-8 bg-gray-700 border-0 md:order-2" />
-            <div className="order-1 px-8 mx-auto lg:px-0 lg:w-3/4 form-group md:order-3">
+            <div className="order-1 px-8 lg:mx-auto lg:px-0 lg:w-3/4 form-group md:order-3">
               <InputField
                 inputId="username"
                 label="Username"
@@ -412,177 +535,6 @@ const Form = ({
           </section>
         </section>
       </form>
-    );
-  }
-
-  if (formType === "login") {
-    formContent = (
-      <section className="flex flex-col items-center justify-center w-full h-full">
-        <form onSubmit={loginHandleSubmit(onLoginUpSubmit)} className="form">
-          <h1 className="w-full text-left title">Sign In</h1>
-          <section className="flex flex-col md:flex-row md:gap-12">
-            <section className="flex flex-col flex-1 gap-4">
-              <div className="form-group">
-                <div className="relative form-group">
-                  <label htmlFor="email" className="label">
-                    Email <span>*</span>
-                    <span className="text-base text-red-700">
-                      {loginErrors?.email?.message}
-                    </span>
-                  </label>
-                  <input
-                    type="email"
-                    className="py-4 text-formText text-dark placeholder:text-dark/50"
-                    id="email"
-                    placeholder="example@ibcoder.com"
-                    required
-                    {...loginRegister("email")}
-                  />
-                  <span className="absolute right-0 flex items-center pr-4 top-16 bottom-8">
-                    <HiOutlineUser className="w-6 h-6" />
-                  </span>
-                </div>
-                <div className="relative form-group">
-                  <label htmlFor="password" className="label">
-                    Password <span>*</span>
-                    <span className="text-base text-red-700">
-                      {loginErrors?.password?.message}
-                    </span>
-                  </label>
-                  <input
-                    type="password"
-                    className="py-4 text-formText text-dark placeholder:text-dark/50"
-                    id="password"
-                    placeholder="********"
-                    required
-                    {...loginRegister("password")}
-                  />
-                  <span
-                    className="absolute right-0 flex items-center pr-4 cursor-pointer top-16 bottom-8"
-                    onClick={() =>
-                      setShowPassword({
-                        ...showPassword,
-                        password: !showPassword.password,
-                      })
-                    }
-                  >
-                    <HiFingerPrint className="w-6 h-6" />
-                  </span>
-                </div>
-                <div className="items-start gap-4 form-group">
-                  {isLoginSubmitting ? (
-                    <div className="w-full form-group-button">
-                      <button
-                        type="button"
-                        className="flex items-center w-full max-w-full text-center btn-medium bg-dark/80 text-light"
-                      >
-                        <svg
-                          className="w-5 h-5 mr-3 text-light animate-spin"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                        <span className="w-full">Please wait...</span>
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="w-full form-group-button">
-                      <button
-                        type="submit"
-                        className="flex items-center w-full max-w-full text-center btn-medium bg-dark text-light"
-                      >
-                        <span className="w-full">Login</span>
-                      </button>
-                    </div>
-                  )}
-                  <div className="flex flex-col items-end justify-end gap-4">
-                    <span
-                      className="cursor-pointer text-formText"
-                      onClick={() => changeFormType({ type: "signup" })}
-                    >
-                      New to the site?{" "}
-                      <span className="font-semibold">Sign Up</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </section>
-            <section className="flex flex-col flex-1 gap-4 mt-8">
-              <div className="grid grid-cols-1 gap-2 place-content-center place-items-center">
-                <button
-                  type="button"
-                  className="flex flex-row items-center justify-start w-full p-1 rounded-sm shadow-xl cursor-pointer bg-light hover:shadow-2xl"
-                  onClick={() =>
-                    signIn("google", {
-                      callbackUrl: process.env.NEXT_PUBLIC_CALLBACK_URL,
-                    })
-                  }
-                >
-                  <Image
-                    src="/assets/google/btn_google_light_normal_ios.svg"
-                    width={56}
-                    height={56}
-                    alt="Sign in with Google"
-                    className="object-contain w-16 h-16 ml-2"
-                  />
-                  <span className="ml-6 text-lg font-bold">
-                    Sign in with Google
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  className="flex flex-row items-center justify-start w-full p-2 rounded-sm shadow-xl cursor-pointer bg-light hover:shadow-2xl"
-                  onClick={() =>
-                    signIn("twitter", {
-                      callbackUrl: process.env.NEXT_PUBLIC_CALLBACK_URL,
-                    })
-                  }
-                >
-                  <Image
-                    src="/assets/twitter/blue-logo.svg"
-                    width={56}
-                    height={56}
-                    alt="Sign in with Twitter"
-                    className="object-contain w-16 h-16 ml-2"
-                  />
-                  <span className="ml-6 text-lg font-bold">
-                    Sign in with Twitter
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  className="flex flex-row items-center justify-start w-full p-2 rounded-sm shadow-xl cursor-pointer bg-light hover:shadow-2xl"
-                >
-                  <Image
-                    src="/assets/github/github-mark.svg"
-                    width={56}
-                    height={56}
-                    alt="Sign in with GitHub"
-                    className="object-contain w-16 h-16 ml-2"
-                  />
-                  <span className="ml-6 text-lg font-bold">
-                    Sign in with GitHub
-                  </span>
-                </button>
-              </div>
-            </section>
-          </section>
-        </form>
-      </section>
     );
   }
 

@@ -58,7 +58,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         email_verification_token: emailToken,
         sign_for_news_letter: req.body?.signForNewsLetter,
       } as TSignUpFormDBSchema;
-
+      console.log(userData);
       const { user, error } = await createUser(userData);
 
       if (error) {

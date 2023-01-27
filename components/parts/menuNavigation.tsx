@@ -15,9 +15,11 @@ const links = [
 const MenuNavigation = ({
   numberOfItems,
   session,
+  page,
 }: {
   numberOfItems: number;
   session: Session | null;
+  page: string;
 }) => {
   const [activeLink, setActiveLink] = useState("/");
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -41,10 +43,13 @@ const MenuNavigation = ({
           </span>
         </li>
       </Link>
-      <HiBars4
+      <ul>
+        <UserInfoCard classes={"lg:hidden"} />
+      </ul>
+      {/* <HiBars4
         className="w-10 h-10 font-semibold cursor-pointer lg:hidden text-dark"
         onClick={handleMenuNavigation}
-      />
+      /> */}
       <ul
         className={`fixed grid place-content-center gap-2 lg:gap-0 text-center lg:text-left lg:relative lg:flex lg:min-h-0 lg:space-y-0 lg:space-x-6 lg:p-0 lg:translate-y-0 lg:top-0 right-0 left-0 min-h-screen space-y-4 top-16 bg-light py-8 px-4 transform ${
           isMenuOpen ? "translate-y-0" : "translate-y-full"
@@ -60,7 +65,6 @@ const MenuNavigation = ({
             href: string;
             section: string;
           }) => {
-            console.log({ section, href, activeLink });
             return (
               <li key={name} className="min-w-fit">
                 <a
@@ -83,7 +87,7 @@ const MenuNavigation = ({
             );
           }
         )}
-        {!session ? (
+        {!session && (
           <Fragment>
             <li className="lg:hidden">
               <button
@@ -102,8 +106,6 @@ const MenuNavigation = ({
               </button>
             </li>
           </Fragment>
-        ) : (
-          <UserInfoCard classes={"lg:hidden"} />
         )}
       </ul>
     </nav>

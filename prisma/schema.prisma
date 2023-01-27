@@ -36,6 +36,7 @@ model user {
   ethId                    String?
   solId                    String?
   maticId                  String?
+  refresh_token            String?
   book                     book[]
   review                   review[]
   order                    order[]
